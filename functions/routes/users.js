@@ -1,8 +1,10 @@
-const { admin } = require('../firebase');
+const { admin, storage } = require('../firebase');
 var db = admin.firestore();
 var users = db.collection('users');
 var ther = db.collection('therapists');
 var sess = db.collection('sessions');
+var tests = db.collection("tests");
+
 
 exports.getAllUsers = function (req, res) {
     users
@@ -38,13 +40,37 @@ exports.getUser = (req, res) => {
         })
 }
 
+
+
+exports.getUserImage = (req, res) => { // * Demo for image upload
+
+    var bucket = storage.bucket("iknelia-3cd8e.appspot.com");
+    var stor_file = bucket.file('usuarios/placeholders/face-1.png');
+    stor_file.getSignedUrl({
+        version: 'v4',
+        action: 'read',
+        expires: Date.now() + 30 * 60 * 1000, // 15 minutes
+        
+    }).then(sURL => {
+        return res.status(200).send(sURL[0]);
+    })
+    .catch( er => {
+        return res.status(404).send(er);
+    })
+}
+
 exports.getTherapistByUser = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
     users
         .doc(req.params.uid)
         .get()
         .then( doc => {
             const ther_id = doc.data().therapist;
-            ther
+            if (ther_id == null) {
+                console.log("No hay terapeuta");
+                return res.status(204).send({});
+            } else {
+                ther
                 .doc(ther_id)
                 .get()
                 .then( docther => {
@@ -55,6 +81,8 @@ exports.getTherapistByUser = (req, res) => {
                      console.error('Error obteniendo los datos del terapeuta', error);
                      return res.status(404).send(error);
                 })
+            }
+            
         })
 }
 
@@ -80,6 +108,7 @@ exports.getAllSessionsByUser = (req, res) => {
 }
 
 exports.assignTherapist = (req, res) => {
+    console.log(`Reasignando terapeuta ${req.params.tid}`)
     users
         .doc(req.params.uid)
         .update({ therapist: req.params.tid })
@@ -90,6 +119,19 @@ exports.assignTherapist = (req, res) => {
         .catch( error => {
             console.error('Error actualizando el terapeuta del usuario', error);
             return res.status(404).send(error);
+        })      
+}
+
+
+exports.newTestAnswers = (req, res) => {
+    tests.add(req.body.answers)
+        .then( doc => {
+            console.log("Nueva entrada de respuestas creada correctamente!");
+            return res.status(203).send(doc.id);
         })
-        
+        .catch( error => {
+            console.log("Error creando el registro de respuesta!");
+            console.error(error);
+            return res.status(404).send(error);
+        })
 }

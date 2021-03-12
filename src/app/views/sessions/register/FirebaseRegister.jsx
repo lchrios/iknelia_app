@@ -10,14 +10,10 @@ import {
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import useAuth from 'app/hooks/useAuth'
-import history from 'history.js'
+import history from '../../../../history'
 import {NavLogo} from '../../landing/components/Navbar_sc/NavbarElements'
-import axios from 'axios'
-
 
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
@@ -59,7 +55,7 @@ const FirebaseRegister = () => {
     const [state, setState] = useState({})
     const classes = useStyles()
     const [message, setMessage] = useState('')
-    const { createUserWithEmailAndPassword, signInWithGoogle } = useAuth()
+    const { signInWithGoogle } = useAuth()
 
     const handleChange = ({ target: { name, value } }) => {
         setState({
@@ -67,94 +63,47 @@ const FirebaseRegister = () => {
             [name]: value,
         })
     }
-    const handleGoogleRegister = async (event) => {
-        try {
-            await signInWithGoogle()
 
-            let user = firebase.auth().currentUser
+    const handleGoogleRegister = (event) => {
+        signInWithGoogle()
+            .then( result => {
+                var { credential, accessToken, user } = result;
 
-            const user_data = {
-                email: user.email,
-                name: user.name || user.email,
-                age: 18,
-                phone: "3314895548",
-                img: '',
-                therapist: null,
-                sessions: [],
-                payment_met: [],
-                location: ["Guadalajara", "Jalisco", "Mexico"],
-                blogs: []
-            }
-
-            var db = firebase.firestore()
-
-            await db.collection("users").doc(user.uid).set(user_data)
-            await db.collection("therapists").doc(user.uid).set({blogs: []});
-            await db.collection('roles').doc(user.uid).set({role: "patients"})
-
-            history.push('/'+user.uid+'/dashboard')
-        } catch (e) {
-            setMessage(e.message)
-            setLoading(false)
-            console.log(e)
-        }
+                // TODO: enviar a formulario pasando parametros (se puede con controled textfields)
+                history.push({
+                    pathname: '/session/register',
+                    state: {
+                        user: user,
+                        email: state.email,
+                        password: state.email,
+                        withProvider: true,
+                        credential: credential,
+                        token: accessToken
+                    }
+                });
+            })
+            .catch( error => {
+                console.error(error);
+                setMessage(error.message)
+                setLoading(false)
+            })
     }
 
-    const handleFormSubmit = async () => {
-        try {
+    const handleFormSubmit = () => {
+        if (state.agreement) {
             setLoading(true)
-
-            const user_data = {
-                email: state.email,
-                name: state.email,
-                age: 18,
-                phone: "+5213114895548",
-                img: "https://firebasestorage.googleapis.com/v0/b/iknelia-3cd8e.appspot.com/o/usuarios/memerevflash.png?alt=media&token=46df4dfe-edc4-4b11-9b8a-33a74dae4535",
-                therapist: null,
-                sessions: [],
-                payment_met: [],
-                location: ["Guadalajara", "Jalisco", "Mexico"],
-                answered: false,
-                blogs: [],
-            }
-
-            console.log({ 
-                email: state.email, 
-                password: state.password, 
-                userdata: {...user_data} 
-            })
-           
-            axios.post('http://localhost:9999/iknelia-3cd8e/us-central1/api/auth/signuser', 
-                { 
-                    email: state.email, 
-                    password: state.password, 
-                    userdata: {...user_data} 
-                })
-                .then( () => {
-
-                    firebase.auth().signInWithEmailAndPassword(state.email, state.password)
-                        .then( user => {
-                            history.push('/'+user.uid+'/dashboard');
-                        })
-                        .catch( error => {
-                            console.error('Error iniciando sesion');
-                            setLoading(false)
-                            console.error(error);
-                            setMessage(error.message)
-                        })
-                    
-                })
-                .catch( error => {
-                    setLoading(false)
-                    console.error(error);
-                    setMessage(error.message)
-                })
-
-
-        } catch (e) {
+            console.log("De camino al formulario de datos");
+            history.push({
+                pathname: '/session/register',
+                state: {
+                    email: state.email,
+                    password: state.email,
+                    withProvider: "false",
+                }
+            });
+        } else {
             setLoading(false)
-            console.log(e)
-            setMessage(e.message)
+            setMessage('Debes aceptar los términos y condiciones para proceder con el registro.');
         }
     }
 
@@ -176,11 +125,10 @@ const FirebaseRegister = () => {
                                 src="/assets/images/illustrations/posting_photo.svg"
                                 alt=""
                             />
-                            <div className="justify-center ml-16">
-                                <Button onClick={() => history.push('/home')} color="primary" className={classes.button}>
-                                            VOLVER
-                                </Button>
-                            </div>
+                            <Button onClick={() => history.push('/home')} color="secondary" variant="contained" className="x-center" style={{"marginTop": 10}}>
+                                VOLVER
+                            </Button>
+                            
                         </div>
                     </Grid>
                     <Grid item lg={7} md={7} sm={7} xs={12}>
@@ -230,8 +178,6 @@ const FirebaseRegister = () => {
                                 <FormControlLabel
                                     className="mb-4"
                                     name="agreement"
-                                    validators={['required']}
-                                    errorMessages={['Este campo es obligatorio']}
                                     onChange={(e) =>
                                         handleChange({
                                             target: {
@@ -243,7 +189,7 @@ const FirebaseRegister = () => {
                                     control={
                                         <Checkbox
                                             size="small"
-                                            checked={agreement || false}
+                                            checked={agreement}
                                         />
                                     }
                                     label={
@@ -263,7 +209,15 @@ const FirebaseRegister = () => {
                                 )}
                                 <div className="flex items-center">
                                     <div className="relative">
-                                    {/*<Link to='/session/dataform'>*/}
+                                    <Link to={{
+                                            pathname: '/session/register',
+                                            state: {
+                                                email: state.email,
+                                                password: state.email,
+                                                withProvider: false,
+                                            }
+                                        }}
+                                    >
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -280,10 +234,16 @@ const FirebaseRegister = () => {
                                                 }
                                             />
                                         )}
-                                    {/*</Link>*/}
+                                    </Link>
                                     </div>
                                     <span className="mx-2 ml-5">o</span>
-                                    <Link to="/session/signin">
+                                    <Link to={{
+                                        pathname: "/session/signin",
+                                        state: {
+                                            email: state.email,
+                                            password: state.email,  
+                                        } 
+                                    }}>
                                         <Button className="capitalize">
                                             Iniciar sesión
                                         </Button>

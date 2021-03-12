@@ -11,9 +11,9 @@ var { Therapist, therapistConverter } = require('../schema/therapist');
 exports.isAuthorized = (hasRole, allowSameUser) => { // TODO Corregir lectura de roles
     return (req, res, next) => {
         // TODO: Remover cuando se termine la prueba
-        console.log('Skipeando autorizacion por prueba');
-        next();
-        return;
+        // console.log('Skipeando autorizacion por prueba');
+        // next();
+        // return;
 
 
         const { role, uid } = res.locals;
@@ -34,20 +34,20 @@ exports.isAuthorized = (hasRole, allowSameUser) => { // TODO Corregir lectura de
 exports.isAuthenticated = (req, res, next) => {
 
     // TODO: Remover cuando se termine la prueba
-    console.log('Skipeando autenticacion por prueba');
-    next();
-    return;
+    // console.log('Skipeando autenticacion por prueba');
+    // next();
+    // return;
 
 
     console.log('Verificando que el tokenId sea válido');
-
+    //console.log(req.headers.authorization)
     /* 
      * Verifica que el request contenga un ID Token.
      - Por convención el authorization header al portar 
      - un string 'Bearer ' justo antes del tokenId.
     */
-    if ((req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) &&
-        !(req.cookies && req.cookies.__session)) {
+    if (!(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) &&
+    !(req.cookies && req.cookies.__session)) {
             console.error('Ningun Firebase ID token fue pasado como Bearer token en el Authorization header.',
             'Asegurate que autorizas tu request proveyendo el siguiente HTTP header:',
             'Authorization: Bearer <Firebase ID Token>',
@@ -107,7 +107,7 @@ exports.isAuthenticated = (req, res, next) => {
 
 exports.setAdmin = (req, res) => {
     auth
-        .setCustomUserClaims(req.params.uid, { admin: true} )
+        .setCustomUserClaims(req.params.uid, { role: "admin" } )
         .then(() => {
             console.log('Usuario hecho admin exitosamente');
             return res.status(201);
@@ -118,14 +118,41 @@ exports.setAdmin = (req, res) => {
         })
 }
 
+exports.setTherapist = (req, res) => {
+    auth
+        .setCustomUserClaims(req.params.uid, { role: "therapist" } )
+        .then(() => {
+            console.log('Usuario hecho therapist exitosamente');
+            return res.status(201);
+        })
+        .catch( error => {
+            console.error('Error cambiando el rol del usuario', error);
+            return res.status(404).send(error);
+        })
+}
+
+exports.setUser = (req, res) => {
+    auth
+        .setCustomUserClaims(req.params.uid, { role: "user" } )
+        .then(() => {
+            console.log('Usuario hecho user exitosamente');
+            return res.status(201);
+        })
+        .catch( error => {
+            console.error('Error cambiando el rol del usuario', error);
+            return res.status(404).send(error);
+        })
+}
+
 exports.createUserWithEmailAndPassword = (req, res) => {
+
     auth
         .createUser({
             email: req.body.email,
             emailVerified: false,
             password: req.body.password,
             displayName: req.body.userdata.name,
-            photoURL: req.body.userdata.img,
+            photoURL: req.body.userdata.img || "    ",
             disabled: false,
         })
         .then( userRecord => {
@@ -169,7 +196,7 @@ exports.createTherapistWithEmailAndPassword = (req, res) => {
             thers
                 .doc(user.uid)
                 .withConverter(therapistConverter)
-                .set(new Therapist(...req.body.therapistdata))
+                .set(req.body.therapistdata)
                 .then(() => {
                     console.log('Collection: Therapist- Listo!');
                     // * Actualizar el rol del usuario a 'user'

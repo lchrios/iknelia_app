@@ -62,27 +62,19 @@ const TherapistHomeSidenav = () => {
                                 Notas de mis sesiones
                             </DialogTitle>
                             <DialogContent dividers>
-                               <Button>
-                               <    Typography gutterBottom>
-                                    Nota 1
-                                    </Typography>
-        
-                                </Button>
-                                
-                                <Button>
+                               <Button
+                               variant="contained"
+                               color="primary"
+                               className="x-center"
+                               size="large"
+                               onClick={() => history.push('/:pid/notes')}>
                                     <Typography gutterBottom>
-                                        Nota 2
-                                    </Typography>
-                                </Button>
-                               
-                               <Button>
-                                    <Typography gutterBottom>
-                                        Nota 3
+                                        Crear nota
                                     </Typography>
                                 </Button>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} className="bg-error" variant="contained">
+                                <Button onClick={handleClose} className="bg-error" variant="outlined" size="small">
                                     <Icon>clear</Icon>Cerrar
                                 </Button>
                             </DialogActions>
@@ -133,8 +125,8 @@ const TherapistHomeSidenav = () => {
                             </Grid>
                         </Button>
                         {shortcutList.map((item, ind) => (
-                        <Button onClick={() => history.push('/' + user.uid + '/' + item.route)}>
-                            <Grid item key={ind}>
+                        <Button key={ind} onClick={() => history.push('/' + user.uid + '/' + item.route)}>
+                            <Grid item>
                                 <Card className="w-104 h-104 flex items-center justify-center">
                                     <div className="text-light text-center">
                                         <Icon>{item.icon}</Icon>
@@ -371,7 +363,7 @@ const shortcutList = [
     {
         title: 'Calendario',
         icon: 'event',
-        route: 'appointments'
+        route: 'schedule'
     },
     {
         title: 'Pacientes',

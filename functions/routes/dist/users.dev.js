@@ -38,18 +38,25 @@ exports.getUser = function (req, res) {
 };
 
 exports.getTherapistByUser = function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
   users.doc(req.params.uid).get().then(function (doc) {
     var ther_id = doc.data().therapist;
-    ther.doc(ther_id).get().then(function (docther) {
-      console.log('Datos de terapeuta obtenidos correctamente!');
-      return res.status(200).send({
-        id: ther_id,
-        data: docther.data()
+
+    if (ther_id == null) {
+      console.log("No hay terapeuta");
+      return res.status(204).send({});
+    } else {
+      ther.doc(ther_id).get().then(function (docther) {
+        console.log('Datos de terapeuta obtenidos correctamente!');
+        return res.status(200).send({
+          id: ther_id,
+          data: docther.data()
+        });
+      })["catch"](function (error) {
+        console.error('Error obteniendo los datos del terapeuta', error);
+        return res.status(404).send(error);
       });
-    })["catch"](function (error) {
-      console.error('Error obteniendo los datos del terapeuta', error);
-      return res.status(404).send(error);
-    });
+    }
   });
 };
 
@@ -73,6 +80,7 @@ exports.getAllSessionsByUser = function (req, res) {
 };
 
 exports.assignTherapist = function (req, res) {
+  console.log("Reasignando terapeuta ".concat(req.params.tid));
   users.doc(req.params.uid).update({
     therapist: req.params.tid
   }).then(function () {

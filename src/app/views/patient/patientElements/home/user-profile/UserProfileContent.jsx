@@ -4,7 +4,8 @@ import {
     Grid,
     Icon,
     IconButton,
-    Button
+    Button,
+    CircularProgress,
 } from '@material-ui/core'
 import React, { Fragment, useEffect, useState} from 'react'
 import { makeStyles} from '@material-ui/core/styles'
@@ -12,10 +13,9 @@ import history from '../../../../../../history';
 import PatientTest from '../../test/PatientTest'
 import TherapistInfoUser from './TherapistInfoUser'
 import PatientCalendar from '../../calendar/PatientCalendar'
-import axios from 'axios'
 import useAuth from 'app/hooks/useAuth';
-import { NavLogo } from 'app/views/landing/components/Navbar_sc/NavbarElements';
-
+import CheckoutApp from '../../changePayMeth/CheckoutApp';
+import { Loading } from 'app/components/Loading/Loading';
 
 
 const usestyles = makeStyles(({ palette, ...theme }) => ({
@@ -72,29 +72,80 @@ const usestyles = makeStyles(({ palette, ...theme }) => ({
 
 
 
-const UserProfileContent = ({ toggleSidenav }) => {
+const UserProfileContent = ({ toggleSidenav, loading, therapist, sessions }) => {
     const { user } = useAuth()
-    const [therapist, setTherapist] = useState()    
+    const classes = usestyles()
+    const [open, setOpen] = useState(false)
+    const [sesInfo, setSesInfo] = useState([
+        {
+            title: "Sesiones agendadas",
+            amount: 1,
+        },
+        {
+            title: "Sesiones completadas",
+            amount: 2,
+        },
+        {
+            title: "Proxima cita",
+            amount: 3,
+        }
+    ])
 
     useEffect(() => {
+        if (!loading) {
+            generateSessionReport()
+        }
+    }, [loading])
 
-        axios.get('https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/u/'+user.uid+'/t')
-            .then(res => {
-                setTherapist(res.data)
-            })
-
-    }, [user.uid])   
-
-    const classes = usestyles()
-
-    const onClick1 = () => {
-        history.push("/:pid/sessions");
+    const generateSessionReport = () => {
+        var total_ses = sessions.length;
+        var completed_ses = 0;
+        var min_date;
+        var curr_date = new Date();
+        for (var i = 0; i < total_ses; i++) {
+            if (sessions[i].state == 1) { // * Sesion completada
+                completed_ses += 1;
+            }
+            var tmpDate = new Date(sessions[i].start);
+            // console.log(min_date != undefined && tmpDate < min_date && sessions[i].state == 0 && tmpDate > curr_date, tmpDate)
+            if (min_date == undefined && tmpDate > curr_date) {
+                min_date = tmpDate
+            } else if (min_date != undefined && tmpDate < min_date && sessions[i].state == 0 && tmpDate > curr_date) { // * Sesion mas proxima
+                console.log("Nuevo MINIMO Enc", tmpDate);
+                min_date = tmpDate;
+            }
+        }
+        setHasTher(therapist != undefined)
+        setSesInfo([
+            {
+                title: "Sesiones agendadas",
+                amount: total_ses,
+            },
+            {
+                title: "Sesiones completadas",
+                amount: completed_ses,
+            },
+            {
+                title: "Proxima cita",
+                amount: min_date != undefined ? min_date.toUTCString() : "No tienes próxima cita",
+            }
+        ])
     }
 
-    // var { user } = useAuth() 
-    if (therapist == undefined) {
+    const [hasTher, setHasTher] = useState(therapist != undefined);
+    const onClick1 = () => {
+        history.push("/"+user.uid+"/sessions");
+    }
+    
+    function handleClose() {
+        setOpen(false)
+    }
 
-        return (
+    function handleOpen() {
+        setOpen(true)
+    }
+    return (
+        <div>
             <Fragment >
                 <div className={classes.profileContent}>
                     <div className="flex justify-end menu-button">
@@ -102,32 +153,56 @@ const UserProfileContent = ({ toggleSidenav }) => {
                             <Icon className="text-white">menu</Icon>
                         </IconButton>
                     </div>
-                    <div className={classes.headerCardHolder}>
-                        <Grid container spacing={3}>
+                    
+                    <div>
+                    { loading ? <Loading /> :
+                    <>
+                    { hasTher ? 
+                        <Grid container spacing={1} direction="row">
+                            {sesInfo.map((ses) => (
                                 <Grid
                                     item
                                     lg={4}
                                     md={4}
                                     sm={12}
                                     xs={12}
-                                    className="items-center "
+                                    key={ses.title}
                                 >
-                                    <Card className="h-150 bg-primary flex items-center justify-between ">
-                                        <div className="m-auto">
-                                                
-                                                <h4 className="m-auto font-normal text-white ">
-                                                Este es tu perfil. Para comenzar navega por nuestro buscador, y selecciona un terapeuta.
-                                                </h4>
+                                    <Card className="h-96 bg-gray bg-default flex items-center justify-between p-4">
+                                        <div>
+                                            <span className="text-light-white uppercase">
+                                                {ses?.title }
+                                            </span>
+                                            <h4 className="font-normal text-white m-0 pt-2">
+                                                {ses?.amount}
+                                            </h4>
                                         </div>
-                                        <div className="mx-auto">
-                                            <Button variant="contained" color="secondary" className="">
-                                                ¿Necesitas ayuda?
-                                            </Button>
+                                        <div className="w-56 h-36">
+                                            <IconButton onClick={onClick1} className="text-white">
+                                                <Icon> visibility </Icon>
+                                            </IconButton>
                                         </div>
                                     </Card>
-                                    
                                 </Grid>
+                            ))}
                         </Grid>
+                        :
+                        <Card className="h-150 bg-primary flex items-center justify-between ">
+                            <div className="m-auto">    
+                                <h4 className="m-auto font-normal text-white ">
+                                    Este es tu perfil. No cuentas con ningún terapeuta todavía. Para comenzar navega por nuestro buscador, y selecciona un terapeuta.
+                                </h4>
+                            </div>
+                            <div className="mx-auto">
+                                <Button variant="contained" color="secondary" className="">
+                                    ¿Necesitas ayuda?
+                                </Button>
+                            </div>
+                        </Card> 
+                    }
+                    </> 
+                    }
+                    
                     </div>
                     <div className="py-8" />
                     <Grid container spacing={3}>
@@ -136,189 +211,55 @@ const UserProfileContent = ({ toggleSidenav }) => {
                                 <h4 className="font-medium text-muted px-4 pt-4 pb-0">
                                     Comenzar terapia
                                 </h4>
-                                 <PatientTest/>
+                                { loading ? <Loading /> :
+                                    <PatientTest therapist={therapist} loading={loading} />
+                                }
                             </Card>
                             <div className="py-3"></div>
                             <Card className="py-4 elevation-z5">
-                                 <PatientCalendar /> 
+                                <h4 className="font-medium text-muted px-4 pt-4 pb-0">
+                                    Calendario de sesiones
+                                </h4>
+                                { loading ? <Grid container direction="column" alignItems="center"><Grid item><CircularProgress /></Grid></Grid> :
+                                    <>
+                                        { hasTher ? 
+                                        <Card className="py-4 elevation-z5">
+                                            <PatientCalendar />
+                                        </Card> 
+                                        :
+                                        <>
+                                            <h2 className='px-4'>No tienes ninguna sesión, para generar una sesión, primero deberás seleccionar un terapeuta.</h2>
+                                            <Button className="x-center mt-4" variant="contained" color="secondary">Seleccionar terapeuta</Button>
+                                        </>
+                                        }
+                                    </>     
+                                }
+                                
                             </Card>                             
                         </Grid>
-    
+
                         <Grid item lg={4} md={4} sm={12} xs={12}>
                             <Card className="p-4 h-1500 elevation-z5 mb-10">
                                 <h4 className="font-medium text-muted pb-6 pb-0 mb-6">
                                     Tu terapeuta
                                 </h4>
                                 <div className="flex items-center mb-4">
-                                    <TherapistInfoUser />
+                                    <TherapistInfoUser therapist={therapist} loading={loading}/>
                                 </div>
                                 <div className="flex items-center">
                                 </div>
                             </Card>
-                            <Card className="elevation-z5 p-4">
-                                <div>
-                                    <h5 className="font-medium text-muted pb-6 pb-0 mb-6">
-                                        Cambia tu metodo de pago
-                                    </h5>
-                                </div>
-                                
-                                {paymentList.map((method, index) => (
-                                    <Fragment key={index}>
-                                    <Button onClick={() => history.push("/:pid/changepaymethod")}>
-                                        <div className="py-4 px-6 flex flex-wrap items-center justify-between">
-                                           
-                                            <div  className="flex items-center">
-                                                <div className="flex justify-center items-center bg-gray w-64 h-52 border-radius-4">
-                                                    <img
-                                                        className="w-36 overflow-hidden"
-                                                        src={method.img}
-                                                        alt="master card"
-                                                    />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <h5 className="mb-1 font-medium">
-                                                        {method.type}
-                                                    </h5>
-                                                    <span className="text-muted">
-                                                        {method.product}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                         
-                                    
-                                        </div>
-                                        {index !== paymentList.length - 1 && (
-                                            <Divider />
-                                        )}
-                                    </Button>
-                                    </Fragment>
-                                ))}
-                            </Card>
+                            {/**Elemento padre de la aplicación del checkout */}
+                            <CheckoutApp />
+
                         </Grid>
                     </Grid>
                     <div className="py-2"></div>
                 </div>
             </Fragment>
-        )
-
-    }
-
-    return (
-        <Fragment >
-        <div className={classes.profileContent}>
-            <div className="flex justify-end menu-button">
-                <IconButton onClick={toggleSidenav}>
-                    <Icon className="text-white">menu</Icon>
-                </IconButton>
-            </div>
-            <div className={classes.headerCardHolder}>
-                <Grid container spacing={3}>
-                    {sessionsSummery.map((sessions) => (
-                        <Grid
-                            item
-                            lg={4}
-                            md={4}
-                            sm={12}
-                            xs={12}
-                            key={sessions.title}
-                        >
-                            <Card className="h-96 bg-gray bg-default flex items-center justify-between p-4">
-                                <div>
-                                    <span className="text-light-white uppercase">
-                                        {sessions?.title }
-                                    </span>
-                                    <h4 className="font-normal text-white m-0 pt-2">
-                                        {sessions?.amount}
-                                    </h4>
-                                </div>
-                                <div className="w-56 h-36">
-                                    <IconButton onClick={onClick1} className="text-white">
-                                        <Icon> visibility </Icon>
-                                    </IconButton>
-                                </div>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
-            <div className="py-8" />
-            <Grid container spacing={3}>
-                <Grid item lg={8} md={8} sm={12} xs={12}>
-                    <Card className="pb-4 px-4">
-                        <h4 className="font-medium text-muted px-4 pt-4 pb-0">
-                            Comenzar terapia
-                        </h4>
-                         <PatientTest/>
-                    </Card>
-                    <div className="py-3"></div>
-                    <Card className="py-4 elevation-z5">
-                        <PatientCalendar />
-                    </Card>                             
-                </Grid>
-
-                <Grid item lg={4} md={4} sm={12} xs={12}>
-                    <Card className="p-4 h-1500 elevation-z5 mb-10">
-                        <h4 className="font-medium text-muted pb-6 pb-0 mb-6">
-                            Tu terapeuta
-                        </h4>
-                        <div className="flex items-center mb-4">
-                            <TherapistInfoUser />
-                        </div>
-                        <div className="flex items-center">
-                        </div>
-                    </Card>
-                    <Card className="elevation-z5 p-4">
-                        <div>
-                            <h5 className="font-medium text-muted pb-6 pb-0 mb-6">
-                                Cambia tu metodo de pago
-                            </h5>
-                        </div>
-                        
-                        {paymentList.map((method, index) => (
-                            <Fragment key={index}>
-                            <Button onClick={() => history.push("/:pid/changepaymethod")}>
-                                <div className="py-4 px-6 flex flex-wrap items-center justify-between">
-                                   
-                                    <div  className="flex items-center">
-                                        <div className="flex justify-center items-center bg-gray w-64 h-52 border-radius-4">
-                                            <img
-                                                className="w-36 overflow-hidden"
-                                                src={method.img}
-                                                alt="master card"
-                                            />
-                                        </div>
-                                        <div className=" ml-4">
-                                            <h5 className="mb-1 font-medium">
-                                                {method.type}
-                                            </h5>
-                                            <span className="text-muted">
-                                                {method.product}
-                                            </span>
-                                        </div>
-                                    </div>
-                                 
-                            
-                                </div>
-                                {index !== paymentList.length - 1 && (
-                                    <Divider />
-                                )}
-                            </Button>
-                            </Fragment>
-                        ))}
-                    </Card>
-                </Grid>
-            </Grid>
-            <div className="py-2"></div>
         </div>
-    </Fragment>
     )
-    
-}
-
-
-
-    const sessionsSummery = [
-]
+}    
 
 const paymentList = [
     /**{

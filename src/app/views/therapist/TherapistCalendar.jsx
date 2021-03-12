@@ -10,7 +10,6 @@ import { Breadcrumb } from 'app/components'
 import { getAllEvents, updateEvent } from './components/calendar/CalendarService'
 import EventEditorDialog from './components/blogs/EventEditorDialog'
 import globalize from 'globalize'
-import Axios from 'axios'
 import PatientCard from './components/PatientCard'
 import PatientCardEmpty from './components/PatientCardEmpty'
 import {
@@ -19,10 +18,9 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import axios from 'axios'
-import firebase from 'firebase'
 import useAuth from 'app/hooks/useAuth'
 import history from '../../../history'
+import api from 'app/services/api'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     calendar: {
@@ -117,13 +115,13 @@ const TherapistCalendar = () => {
 
     useEffect(() => {
         updateCalendar()
-        axios.get('https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/t/' + user.uid + '/u') 
+        api.get('/t/' + user.uid + '/u') 
         .then(res => {
-            setUserList(res.data)
+            setUserList(res.data.data)
         }) 
-        axios.get('https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/t/' + user.uid + '/s')
+        api.get('/t/' + user.uid + '/s')
         .then(res => {
-            setEvents(res.data)
+            setEvents(res.data.data)
         })
     }, [])
 

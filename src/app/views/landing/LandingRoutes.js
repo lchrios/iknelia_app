@@ -1,8 +1,10 @@
 import React from "react";
 
 const Home = React.lazy(() => import('./Home'))
-const Blog = React.lazy(() => import('./landingBlog/landingBlog'))
+const Blogs = React.lazy(() => import('./landingBlog/landingBlog'))
 const Psychologists = React.lazy(() => import('./psychologists/landingPsy'))
+
+const Blog = React.lazy(() => import ('./blogEntrie/BlogEntrie'))
 
 const settings = {
   activeLayout: "layout1",
@@ -33,12 +35,14 @@ const landingRoutes = [
     settings
   },
   {
-    path:'/landingBlog',
-    component:Blog
+    path:'/blogs',
+    component:Blog,
+    settings
   },
   {
     path:'/psychologists',
-    component: Psychologists
+    component: Psychologists,
+    settings
   }
 ];
 

@@ -7,45 +7,106 @@ import {
     Stepper,
     Grid,
 } from '@material-ui/core'
-import { ValidatorForm } from 'react-material-ui-form-validator'
-import axios from 'axios'
 import history from '../../../../../history'
-import FormTest from './FormTest'
-import FormTestSt2 from './FormTestSt2'
-import FormTestSt3 from './FormTestSt3'
-import PreTest from './preTest'
-
+import FormTest from './steps/FormTest'
+import FormTestSt2 from './steps/FormTestSt2'
+import FormTestSt3 from './steps/FormTestSt3'
+import PreTest from './steps/PreTest'
+import SessionValidatorForm from './steps/SessionValidatorForm'
 import useAuth from 'app/hooks/useAuth'
+import { Loading } from 'app/components/Loading/Loading'
 
 
 const getSteps = () => {
-    return ['Paso 1', 'Paso 2', 'Paso 3']
+    return ['Validacion primera cita', 'Razones de visita', 'Otras preguntas']
 }
 
 
-export default function PatientTest() {
-
-    const [therapist, setTherapistData] = useState()
-    useEffect(() => {
-        axios.get('https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/u/'+user.uid+'/t').then(res => {
-            setTherapistData(res.data)
-        })
+const PatientTest = ({ loading, therapist }) => {
+    
+    const [state, setState] = useState({ 
+        checks: {
+            a: false, 
+            b: false, 
+            c: false,
+        }, 
+        form2a: { 
+            ayes: false,
+            ano: false,
+        },
+        form2b: {
+            byes: false,
+            bno: false,
+        }
     })
-
+    const [checked, setChecked] = useState(true)
     const [activeStep, setActiveStep] = useState(0)
     const {user} = useAuth()
     const steps = getSteps()
 
     const handleNext = () => {
+        console.log(activeStep)
         if(activeStep == 2 && therapist == undefined ) {
             history.push('/'+ user.uid +'/browse')
         }
 
-        else if (therapist) {
-            window.location = '/'
+        else if(activeStep == 2 && therapist) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1)
+            console.log(state)
+
+            // send information
         }
 
-        setActiveStep((prevActiveStep) => prevActiveStep + 1)
+        else if(checked){
+            setActiveStep((prevActiveStep) => prevActiveStep + 1)
+        }   
+    }
+
+    const handleChangeA = (event) => {
+        setState({ 
+            ...state, 
+            form2a: { 
+                ...{
+                    ayes: false,
+                    ano: false
+                },
+                [event.target.name]: event.target.checked
+            }
+        })
+    }
+
+    const handleChangeB = (event) => {
+        setState({ 
+            ...state, 
+            form2b: { 
+                ...{
+                    byes: false,
+                    bno: false,
+                },
+                [event.target.name]: event.target.checked
+            }
+        })
+    }
+
+    const handleChangeCheck = (event) => {
+        setState({ 
+            ...state, 
+            checks: {
+                ...{ 
+                    a: false, 
+                    b: false, 
+                    c: false 
+                }, 
+                [event.target.name]: event.target.checked 
+            }
+        })
+    }
+
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        })
     }
 
     const handleBack = () => {
@@ -55,46 +116,46 @@ export default function PatientTest() {
     const handleReset = () => {
         setActiveStep(0)
     }
-
-    const handleChange = ({ target: { name, value } }) => {
-        console.log(name + ": " + value)
-    }
-
-    const handleSubmit1 = () => {
-        handleNext()
-    }
     
+    const toggleNext = () => {
+        setChecked(true)
+
+    }
 
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
             case 0: 
-            if (activeStep == 0 && therapist == undefined) {
-                return (
-                    <PreTest />
-                )
-            }
-            else if (therapist) {
-                return (
-                <ValidatorForm 
-                    onSubmit={handleNext}
-                    onError={(errors) => null}
-                >
-                    <FormTest />
-                </ValidatorForm>
-                )
-            }
-                
-            case 1:
-                return <FormTestSt2 />
-            case 2:
-                return <FormTestSt3 />          
+            {/** *TODO C REGRESAR A THERPIST === UNDEFINED  */}
+                if (therapist == undefined) {
+                    console.log("NO THERAPIST")
+                    return (
+                        <PreTest />
+                    )
+                }
+                else {
+                    return (
+                            <SessionValidatorForm state={state} loading={loading} handleChangeCheck={handleChangeCheck} />
+                    )
+                }
+                break;
+        /** *TODO A LOS USUARIOS NO DEBERÍA DEJARLOS CONTINUAR SIN VALIDAR QUE INTRODUJERON LA INFORMACIÓN */
+            case 1: 
+                return <FormTest handleChange={handleChange} /> 
+            case 2: 
+                return <FormTestSt2 state={state} handleChangeA={handleChangeA} handleChangeB={handleChangeB} />
+            case 3: 
+                return <FormTestSt3 handleChange={handleChange} /> 
             default:
-                return ''
+                return 
         }
     }    
 
     return (
-        <div>
+        <Grid container spacing={2}>
+        { loading ? <Loading />
+        :
+        <>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -102,53 +163,72 @@ export default function PatientTest() {
                     </Step>
                 ))}
             </Stepper>
-            <div>
-                {activeStep === steps.length ? (
-                    <div>
-                        <div className="flex items-center mb-4">
-                            <Icon>done</Icon> <span className="ml-2">Tus respuestas han sido enviadas :D</span>
-                        </div>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleReset}
-                        >
-                            Reset
-                        </Button>
-                    </div>
-                ) : (
-                    <div>
-                        <Grid item
-                            lg={12}
-                            md={12}
-                            sm={12}
-                            xs={12}>
-                            {getStepContent(activeStep)}
-                        </Grid>
-                        <div className="pt-6">
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                // disabled={activeStep === 0}
-                                onClick={handleBack}
-                            >
-                                Volver
-                            </Button>
-                            <Button
-                                className="ml-4"
-                                variant="contained"
-                                color="primary"
-                                disabled={activeStep === 0}
-                                onClick={handleNext}
-                            >
-                                {activeStep === steps.length - 1
-                                    ? 'Terminar y buscar terapeuta'
-                                    : 'SIguiente'}
-                            </Button>
-                        </div>
-                    </div>
-                )}
+        </Grid>
+        {activeStep === steps.length ? (
+            <div style={{ 
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center", 
+            }}>
+                <div className="flex items-center mb-4">
+                    <Icon>done</Icon> <span className="ml-2">Tus respuestas han sido enviadas :D</span>
+                </div>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleReset}
+                >
+                    Reset
+                </Button>
             </div>
-        </div>
+        ) : (
+            <>
+            <Grid item
+                lg={12}
+                md={12}
+                sm={12}
+                xs={12}>
+                {getStepContent(activeStep)}
+            </Grid>
+            <Grid item
+                lg={12}
+                md={12}
+                sm={12}
+                xs={12}
+            >     
+                <div className="pt-6" style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                    >
+                        Volver
+                    </Button>
+                    <Button
+                        className="ml-4"
+                        variant="contained"
+                        color="primary"
+                        disabled={false}
+                        onClick={handleNext}
+                    >
+                        {activeStep === steps.length - 1
+                            ? 'Enviar'
+                            : 'Siguiente'}
+                    </Button>
+                </div>
+            </Grid> 
+            </>
+        )}
+        </>
+        }
+        </Grid>
     )
 }
+
+export default PatientTest

@@ -1,14 +1,17 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
+const cors = require('cors')
 
 // * Funciones de autenticacion
 const {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   isAuthenticated,
   isAuthorized,
   createTherapistWithEmailAndPassword,
+  setAdmin,
+  setTherapist,
+  setUser,
 } = require("./routes/auth");
 
 // * Funciones relativas al usuario
@@ -16,9 +19,10 @@ const {
   getAllSessionsByUser,
   getUser,
   getTherapistByUser,
-  getTherapistRefByUser,
   getAllUsers,
   assignTherapist,
+  newTestAnswers,
+  getUserImage,
 } = require("./routes/users");
 
 // * Funciones relativas al terapeuta
@@ -27,6 +31,8 @@ const {
   getAllSessionsByTherapist,
   getTherapist,
   getPatientsbyTherapist,
+  getNotesByTherapist,
+  newNote
 } = require("./routes/therapists");
 
 
@@ -48,13 +54,21 @@ const {
   getAllBlogsByTherapist,
 } = require("./routes/blogs");
 
+//*Funciones de stripe
+  const { sendPaymentInfo, getSecret } = require("./routes/stripe");
+
 // * uso de transformacion a json
 app.use(express.json());
+app.use(express.urlencoded({extended: true}))
 
 // * permisos del CORS
+app.use(cors());
 app.use( (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "iknelia.netlify.app");
-  res.header("Access-Control-Allow-Origin", "localhost:3000");
+  res.header("Access-Control-Allow-Origin", "http://iknelia.netlify.app");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.header("Access-Control-Allow-Origin", "https://iknelia-3cd8e.web.app/");
+  res.header("Access-Control-Allow-Origin", "https://iknelia-3cd8e.firebaseapp.com/");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -77,6 +91,8 @@ app.get("/t/:tid/s", isAuthenticated, isAuthorized(roles.user), getAllSessionsBy
 app.get("/t/:tid/s/:sid", isAuthenticated, isAuthorized(roles.user), getSession);
 app.get("/t/:tid/b", isAuthenticated, isAuthorized(roles.user), getAllBlogsByTherapist);
 app.get("/t/:tid/u", isAuthenticated, isAuthorized(roles.therapist), getPatientsbyTherapist);
+app.get("/t/:tid/n", isAuthenticated, isAuthorized(roles.therapist), getNotesByTherapist);
+app.post("/t/:tid/n", isAuthenticated, isAuthorized(roles.therapist), newNote);
 
 // * rutas de usuario
 app.get("/u", isAuthenticated, isAuthorized(roles.admin), getAllUsers);
@@ -84,7 +100,13 @@ app.get("/u/:uid", isAuthenticated, isAuthorized(roles.user), getUser);
 app.get("/u/:uid/t", isAuthenticated, isAuthorized(roles.user), getTherapistByUser);
 app.get("/u/:uid/s", isAuthenticated, isAuthorized(roles.user), getAllSessionsByUser);
 app.get("/u/:uid/s/:sid", isAuthenticated, isAuthorized(roles.user), getSession);
-app.put("/u/:uid/assign/:tid", isAuthorized, isAuthorized(roles.user), assignTherapist)
+app.post("/u/:uid/t/:tid", isAuthenticated, isAuthorized(roles.user), assignTherapist);
+app.post("/u/:uid/test", isAuthenticated, isAuthorized(roles.user), newTestAnswers);
+app.get("/u/:uid/image", getUserImage);
+
+//*rutas de stripe (lado user)
+app.post("/u/:uid/checkout", isAuthenticated, isAuthorized(roles.user), sendPaymentInfo);
+// app.get("/u/:uid/secret", isAuthenticated, isAuthorized(roles.user), getSecret);
 
 // * rutas de blogs
 app.get("/b", isAuthenticated, isAuthorized(roles.user), getAllBlogs);
@@ -103,6 +125,27 @@ app.delete("/s/:sid", isAuthenticated, isAuthorized(roles.user), deleteSession);
 // * rutas de autenticacion
 app.post("/auth/signuser", createUserWithEmailAndPassword);
 app.post("/auth/signtherapist", createTherapistWithEmailAndPassword)
+
+// * rutas de autorizacion
+app.put("/auth/:uid/admin", setAdmin);
+app.put("/auth/:uid/therapist", setTherapist);
+app.put("/auth/:uid/user", setUser);
+
+
+// * TEMP funtions
+
+app.post("/auth/restore/users/img", (req, res) => {
+    admin.firestore().collection("users").get()
+    .then( query => {
+        query.forEach( doc => {
+            doc.ref.update("img", "usuarios/placeholders/none-user.png").catch( er => {
+                console.error(er)
+            })
+        })
+        res.status(200).send("Usuarios actualizados");
+    })
+})
+
 
 // * export de la api
 exports.api = functions.region("us-central1").https.onRequest(app);

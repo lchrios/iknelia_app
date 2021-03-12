@@ -1,13 +1,12 @@
 import React from 'react'
 import { Icon, IconButton, Hidden, MenuItem, Avatar } from '@material-ui/core'
 import { MatxMenu, MatxToolbarMenu, MatxSearchBox } from 'app/components'
-import NotificationBar2 from '../../NotificationBar2/NotificationBar2'
-import ShoppingCart from '../../ShoppingCart/ShoppingCart'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 import useSettings from 'app/hooks/useSettings'
 import useAuth from 'app/hooks/useAuth'
+import history from '../../../../history'
 import { NavLogo } from 'app/views/landing/components/Navbar_sc/NavbarElements'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
@@ -50,6 +49,12 @@ const Layout2Topbar = () => {
         })
     }
 
+    const handleLogout = () => {
+        logout().then(() => {
+            history.push(`/home`)
+        })
+    }
+
     const handleSidebarToggle = () => {
         let { layout2Settings } = settings
 
@@ -68,16 +73,13 @@ const Layout2Topbar = () => {
                 <div className="mx-auto"></div>
                 <div className="flex items-center">
                     <MatxToolbarMenu offsetTop="64px">
-                        {/*<MatxSearchBox />
-                        <NotificationBar2 />*/}
-
-                        {/* <ShoppingCart /> */}
-                        <span className="pl-1"><h3>{user.name}</h3></span>
+                        <span className="pl-1"><h3 className={classes.brandText}>{user.name}</h3></span> 
+                        {/* // TODO ESQ: hacer esto bonito */}
                         <MatxMenu
                             menuButton={
                                 <Avatar
                                     className="cursor-pointer mx-2"
-                                    src={user.avatar}
+                                    src={user.img}
                                 />
                             }
                         >
@@ -99,7 +101,7 @@ const Layout2Topbar = () => {
                                 <span className="pl-4"> Settings </span>
                             </MenuItem>
                             <MenuItem
-                                onClick={logout}
+                                onClick={handleLogout}
                                 className={classes.menuItem}
                             >
                                 <Icon> power_settings_new </Icon>

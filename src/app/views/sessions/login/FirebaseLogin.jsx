@@ -7,20 +7,18 @@ import {
     Button,
     CircularProgress,
 } from '@material-ui/core'
-import { Link } from 'react-router-dom'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-import { MatxLogo, MatxDivider } from 'app/components'
 import { makeStyles } from '@material-ui/core/styles'
 import history from 'history.js'
 import firebase from 'firebase/app'
 import clsx from 'clsx'
-import {NavLogo} from '../../landing/components/Navbar_sc/NavbarElements';
 import useAuth from 'app/hooks/useAuth'
 import { IkneliaLogo } from 'app/components/Brand/Brand'
+import MatxDivider from 'app/components/MatxDivider/MatxDivider'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     cardHolder: {
-        background: '#1A2038',
+        background: '#00009C',
     },
     card: {
         maxWidth: 800,
@@ -33,16 +31,28 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.down('sm')]: {
-            minWidth: 200,
+            minWidth: 400,
+            alignItems: 'center'
+        },
+        [theme.breakpoints.down('xs')]: {
+            minWidth: 400,
+            alignItems: 'start'
         },
     },
     logo: {
         display: 'flex',
-        alignItems: 'center',
         '& span': {
             fontSize: 26,
             lineHeight: 1.3,
             fontWeight: 800,
+            '@media screen and (max-width: 943px)' : {
+                fontSize: 40,
+                
+            },
+            '@media screen and (max-width: 480px)' : {
+                fontSize: 20,
+                
+            }
         },
     },
     mainTitle: {
@@ -65,6 +75,23 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
                 top: 7,
                 backgroundColor: palette.error.main,
             },
+            '@media screen and (max-width: 943px)' : {
+                fontSize: 25,
+                '&::after': {
+                    position: 'absolute',
+                    content: '""',
+                    width: 4,
+                    height: 4,
+                    borderRadius: 4,
+                    left: 2,
+                    top: 7,
+                    backgroundColor: palette.error.main,
+                },
+            },
+            '@media screen and (max-width: 480px)' : {
+                fontSize: 15,
+                paddingLeft: 0,
+            }
         },
     },
     buttonProgress: {
@@ -90,7 +117,7 @@ const FirebaseLogin = () => {
         remember: true,
     })
     const [message, setMessage] = useState('')
-    const { signInWithEmailAndPassword, signInWithGoogle } = useAuth()
+    const { signInWithEmailAndPassword, signInWithGoogle, assignUserRole } = useAuth()
 
     const classes = useStyles()
 
@@ -106,8 +133,39 @@ const FirebaseLogin = () => {
         try {
             await signInWithEmailAndPassword(userInfo.email, userInfo.password)
             var user = firebase.auth().currentUser
-            console.log(user)
-            history.push('/'+user.uid+'/dashboard')
+            //console.log(user)
+
+            user.getIdTokenResult()
+                .then( decodedToken => {
+                    switch (decodedToken.claims.role) {
+                        case "user":
+                            history.push(`/${user.uid}/home`)
+                            break;
+
+                        case "therapist":
+                            history.push(`/${user.uid}/dashboard`)
+                            break;
+
+                        case "admin":
+                            history.push(`/${user.uid}/analytics`)
+                            break;
+                
+                        default:
+                            console.error('No role was detected')
+                            // TODO: if no role, set user role and redirect to home
+                            assignUserRole(user.uid).then(() => {
+                                history.push(`/${user.uid}/home`);
+                                
+                            });
+                            break; 
+                            
+                            
+                    }
+                })
+                .catch( error => {
+                    console.error("Error al obtener el decodedToken del user", error)
+                })
+            //history.push('/'+user.uid+'/dashboard')
         } catch (e) {
             console.log(e)
             setMessage("No es posible iniciar sesión, Quizá tu contraseña sea incorrecta o es probable que no estés registrado. Intenta registrarte.")
@@ -135,19 +193,19 @@ const FirebaseLogin = () => {
         >
             <Card className={classes.card}>
                 <Grid container>
-                    <Grid item lg={6} md={6} sm={5} xs={12}>
+                    <Grid item lg={6} md={6} sm={12} xs={12}>
                         <div
                             className={clsx({
-                                'py-8 px-14 h-full': true,
+                                'py-8 px-7 h-full': true,
                                 [classes.cardLeft]: true,
                             })}
                         >
                             <div className={classes.logo}>
                                     <IkneliaLogo to={"/home"}>Iknelia</IkneliaLogo>
                             </div>
-                            <h1 className={classes.mainTitle}>
+                            {/* <h1 className={classes.mainTitle}>
                                 La atención que mereces
-                            </h1>
+                            </h1> */}
                             <div className={classes.features}>
                                 <div className="item">
                                     Crea tu cuenta 
@@ -170,7 +228,7 @@ const FirebaseLogin = () => {
                             </div>
                         </div>
                     </Grid>
-                    <Grid item lg={6} md={6} sm={6} xs={12}>
+                    <Grid item lg={6} md={6} sm={12} xs={12}>
                         <div className="px-8 pt-8">
                             <Button
                                 onClick={handleGoogleLogin}

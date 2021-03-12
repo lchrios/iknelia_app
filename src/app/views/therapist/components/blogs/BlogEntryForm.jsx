@@ -5,13 +5,13 @@ import {
   Grid,
     Icon,
 } from "@material-ui/core";
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { makeStyles } from '@material-ui/core/styles'
 import useAuth from "app/hooks/useAuth";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import clsx from "clsx";
-import axios from "axios";
 import history from "../../../../../history";
+import api from "app/services/api";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -60,8 +60,7 @@ const BlogEntryForm = () => {
         img: demoimg[Math.floor(Math.random() * 3)],
       }
 
-      // TODO: Cambiar direccion a la de la api
-      axios.post("https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/b/new", {blogdata: {...blogdata}})
+      api.post("/b/new", {blogdata: {...blogdata}})
         .then(() => {
           history.push("/" + user.uid + "/myblogs");
         });

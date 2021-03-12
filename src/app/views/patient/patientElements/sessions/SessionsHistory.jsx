@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react'
-import { Grow, Icon, IconButton, TextField, Tooltip } from '@material-ui/core'
-import { format } from 'date-fns'
-import { Breadcrumb } from 'app/components'
+import { CircularProgress, Grow, Icon, IconButton, TextField, Tooltip, Grid } from '@material-ui/core'
 import MUIDataTable from 'mui-datatables'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import useAuth from 'app/hooks/useAuth'
+import api from 'app/services/api'
 
-const SessionsHistory = () => {
+const SessionsHistory = ({toggleSidenav}) => {
 
     const [orderList, setOrderList] = useState(order)
+    const [idList, setIdList] = useState();
+    const [loading, setLoading] = useState(true)
     var { user } = useAuth()
 
 
     useEffect(() => {
-        axios.get('https://us-central1-iknelia-3cd8e.cloudfunctions.net/api/u/'+user.uid+'/s').then(res => {
-            console.log(res.data) 
-            setOrderList(res.data)
-        })    
-    }, [user])
+        api.get('/u/'+user.uid+'/s')
+            .then(res => {
+                setOrderList(res.data.data)
+                console.log(res.data.id)
+                setIdList(res.data.id)
+                setLoading(false)
+            })    
+    }, [])
     
 
     const columns = [
         {
             name: '_id',
-            label: 'Sesión No.',
+            label: 'ID de la Sesión',
             options: {
                 customBodyRenderLite: (dataIndex) => (
-                    <span className="ellipsis">{orderList[dataIndex].id}</span>
+                    <span className="ellipsis">{idList[dataIndex]}</span>
                 ),
             },
         },
@@ -76,19 +80,19 @@ const SessionsHistory = () => {
                     let status = orderList[dataIndex].state
 
                     switch (status) {
-                        case 'tomada':
+                        case 1:
                             return (
                                 <small className="capitalize text-white bg-green border-radius-4 px-2 py-2px">
                                     {status}
                                 </small>
                             )
-                        case 'pendiente':
+                        case 0:
                             return (
                                 <small className="capitalize bg-secondary border-radius-4 px-2 py-2px">
                                     {status}
                                 </small>
                             )
-                        case 'perdida':
+                        case -1:
                             return (
                                 <small className="capitalize text-white bg-error border-radius-4 px-2 py-2px">
                                     {status}
@@ -107,7 +111,7 @@ const SessionsHistory = () => {
             options: {
                 filter: true,
                 customBodyRenderLite: (dataIndex) => (
-                    <span className="ellipsis">
+                    <span className="">
                         {orderList[dataIndex].pay_met}
                     </span>
                 ),
@@ -155,21 +159,32 @@ const SessionsHistory = () => {
 
     return (
         <div className="m-sm-30">
+            
+            { loading ? 
+            <Grid container direction="column" alignItems="center"><Grid item><CircularProgress color="secondary" /></Grid></Grid> 
+            :
             <div className="overflow-auto">
-                <div className="min-w-750">
+                <div className="hide-on-pc flex justify-end menu-button"> 
+                {/* // TODO: Arreglar el boton del menu no se activa si esta en vista de pantalla grande  */}
+                        <IconButton onClick={toggleSidenav}>
+                            <Icon className="">menu</Icon>
+                        </IconButton>
+                </div>
+                <div className="min-w-300">
                     <MUIDataTable
                         title={'Mis sesiones'}
                         data={orderList}
                         columns={columns}
                         options={{
                             filterType: 'textField',
-                            responsive: 'standard',
+                            responsive: 'vertical',
                             selectableRows: "none",
                             filter: false,
                             download: false,
                             print: false,
                             viewColumns:false,
                             elevation: 0,
+                            pagination:false,
                             rowsPerPageOptions: [10, 20, 40, 80, 100],
                             onRowsDelete: (data) => console.log(data),
                             customSearchRender: (
@@ -217,6 +232,7 @@ const SessionsHistory = () => {
                     />
                 </div>
             </div>
+            }
         </div>
     )
 }

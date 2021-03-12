@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { firebaseConfig } from 'config.js'
 import { MatxLoading } from 'app/components'
+import api from 'app/services/api'
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
@@ -39,15 +40,22 @@ const AuthContext = createContext({
     createUserWithEmailAndPassword: () => Promise.resolve(),
     signInWithEmailAndPassword: () => Promise.resolve(),
     signInWithGoogle: () => Promise.resolve(),
+    assignUserRole: () => Promise.resolve(),
     logout: () => Promise.resolve(),
 })
 
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialAuthState)
-    const [dbRef, setDbRef] = useState()
 
     const signInWithEmailAndPassword = (email, password) => {
         return firebase.auth().signInWithEmailAndPassword(email, password)
+    }
+
+    const assignUserRole = (uid) => {
+        api.put(`/auth/${uid}/user`)
+            .then(res => {
+                console.log("Rol actualizado a: user")
+            })
     }
 
     const signInWithGoogle = () => {
@@ -69,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const createUserWithEmailAndPassword = async (email, password) => {
-        return firebase.auth().createUserWithEmailAndPassword(email, password)
+        return api.post('/auth/signuser', { email: email, password: password })
     }
 
     const logout = () => {
@@ -79,20 +87,26 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                dispatch({
-                    type: 'FB_AUTH_STATE_CHANGED',
-                    payload: {
-                        isAuthenticated: true,
-                        user: {
-                            uid: user.uid,
-                            name: user.displayName || user.email,
-                            img: user.photoURL,
-                            email: user.email,
-                            age: 18,
-                            phone: user.phoneNumber,
-                        },
-                    },
-                })
+                user.getIdTokenResult()
+                    .then( idTokenResult => {
+                        api.defaults.headers.common["Authorization"] = `Bearer ${idTokenResult.token}`
+                        dispatch({
+                            type: 'FB_AUTH_STATE_CHANGED',
+                            payload: {
+                                isAuthenticated: true,
+                                user: {
+                                    uid: user.uid,
+                                    name: user.displayName || user.email,
+                                    img: user.photoURL,
+                                    email: user.email,
+                                    age: 18,
+                                    phone: user.phoneNumber,
+                                    role: idTokenResult.claims.role,
+                                    token: idTokenResult.token,
+                                },
+                            },
+                        })
+                    })
             } else {
                 dispatch({
                     type: 'FB_AUTH_STATE_CHANGED',
@@ -120,6 +134,7 @@ export const AuthProvider = ({ children }) => {
                 signInWithEmailAndPassword,
                 signInWithGoogle,
                 logout,
+                assignUserRole,
             }}
         >
             {children}

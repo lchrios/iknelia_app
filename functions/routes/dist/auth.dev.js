@@ -1,19 +1,5 @@
 "use strict";
 
-function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -41,9 +27,9 @@ exports.isAuthorized = function (hasRole, allowSameUser) {
   // TODO Corregir lectura de roles
   return function (req, res, next) {
     // TODO: Remover cuando se termine la prueba
-    console.log('Skipeando autorizacion por prueba');
-    next();
-    return;
+    // console.log('Skipeando autorizacion por prueba');
+    // next();
+    // return;
     var _res$locals = res.locals,
         role = _res$locals.role,
         uid = _res$locals.uid;
@@ -66,17 +52,18 @@ exports.isAuthorized = function (hasRole, allowSameUser) {
 
 exports.isAuthenticated = function (req, res, next) {
   // TODO: Remover cuando se termine la prueba
-  console.log('Skipeando autenticacion por prueba');
-  next();
-  return;
-  console.log('Verificando que el tokenId sea válido');
+  // console.log('Skipeando autenticacion por prueba');
+  // next();
+  // return;
+  console.log('Verificando que el tokenId sea válido'); //console.log(req.headers.authorization)
+
   /* 
    * Verifica que el request contenga un ID Token.
    - Por convención el authorization header al portar 
    - un string 'Bearer ' justo antes del tokenId.
   */
 
-  if ((req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) && !(req.cookies && req.cookies.__session)) {
+  if (!(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) && !(req.cookies && req.cookies.__session)) {
     console.error('Ningun Firebase ID token fue pasado como Bearer token en el Authorization header.', 'Asegurate que autorizas tu request proveyendo el siguiente HTTP header:', 'Authorization: Bearer <Firebase ID Token>', 'o pasando una "__session" cookie.');
     return res.status(403).send('Unauthorized');
   }
@@ -133,9 +120,33 @@ exports.isAuthenticated = function (req, res, next) {
 
 exports.setAdmin = function (req, res) {
   auth.setCustomUserClaims(req.params.uid, {
-    admin: true
+    role: "admin"
   }).then(function () {
     console.log('Usuario hecho admin exitosamente');
+    return res.status(201);
+  })["catch"](function (error) {
+    console.error('Error cambiando el rol del usuario', error);
+    return res.status(404).send(error);
+  });
+};
+
+exports.setTherapist = function (req, res) {
+  auth.setCustomUserClaims(req.params.uid, {
+    role: "therapist"
+  }).then(function () {
+    console.log('Usuario hecho therapist exitosamente');
+    return res.status(201);
+  })["catch"](function (error) {
+    console.error('Error cambiando el rol del usuario', error);
+    return res.status(404).send(error);
+  });
+};
+
+exports.setUser = function (req, res) {
+  auth.setCustomUserClaims(req.params.uid, {
+    role: "user"
+  }).then(function () {
+    console.log('Usuario hecho user exitosamente');
     return res.status(201);
   })["catch"](function (error) {
     console.error('Error cambiando el rol del usuario', error);
@@ -179,7 +190,7 @@ exports.createUserWithEmailAndPassword = function (req, res) {
 exports.createTherapistWithEmailAndPassword = function (req, res) {
   auth.createUserWithEmailAndPassword(req.body.email, req.body.password).then(function (user) {
     // subir a colleccion de usuarios
-    thers.doc(user.uid).withConverter(therapistConverter).set(_construct(Therapist, _toConsumableArray(req.body.therapistdata))).then(function () {
+    thers.doc(user.uid).withConverter(therapistConverter).set(req.body.therapistdata).then(function () {
       console.log('Collection: Therapist- Listo!'); // * Actualizar el rol del usuario a 'user'
 
       auth.setCustomUserClaims(user.uid, {

@@ -1,16 +1,13 @@
 import React, { useState, useEffect} from 'react'
 import MUIDataTable from 'mui-datatables'
 import { Avatar, Grow, Icon, IconButton, TextField} from '@material-ui/core'
-import history from '../../../../../history
+import history from '../../../../../history'
 import useAuth from 'app/hooks/useAuth'
-import axios from 'app/services/api'
 import api from 'app/services/api'
 
-//const db = firebase.app().firestore()
 
 
-
-const BrowseApp = () => {
+const BrowseApp = ({ toggleSidenav }) => {
 
     const [therapistList, setTherapistList] = useState([])
     const [docRefs, setDocRefs] = useState([])
@@ -18,9 +15,9 @@ const BrowseApp = () => {
 
     useEffect(() => {
         
-        axios.get('/t').then(res => {
-            setTherapistList(res.data[1])
-            setDocRefs(res.data[0])
+        api.get('/t').then(res => {
+            setTherapistList(res.data.data)
+            setDocRefs(res.data.id)
         })
 
     }, [])
@@ -71,7 +68,7 @@ const BrowseApp = () => {
                     let therapist = therapistList[dataIndex]
 
                     return (
-                        <span className="ellipsis">{therapist?.exp}</span>
+                        <span className="">{therapist?.exp}</span>
                     )
                 },
             },
@@ -90,7 +87,7 @@ const BrowseApp = () => {
                 }
             },
         },
-        {
+        /*{
             name: 'phone',
             label: 'Telefono',
             options: {
@@ -103,26 +100,28 @@ const BrowseApp = () => {
                     )
                 }
             },
-        },
+        },*/
         {
             name: 'action',
-            label: ' ',
+            label: 'Seleccionar terapeuta ',
             options: {
                 filter: false,
                 customBodyRenderLite: (dataIndex) => (
-                    <div className="flex items-center">
-                        <div className="flex-grow"></div>
+                    <div className="flex">
+                        <div className=""></div>
                             <IconButton onClick={() => {
-                                api.put(`/u/${user.uid}/assign/${docRefs[dataIndex]}`)
+                                api.post(`/u/${user.uid}/t/${docRefs[dataIndex]}`)
                                     .then( res => {
                                         console.log('Terapeutas reasignados', res.status);
-                                        history.push(`/${user.uid}/home`)
+                                        history.push(`/${user.uid}/changepaymethod`)
                                     })
                                     .catch( error => {
                                         console.error(error);
                                     })
                             }}>
-                                <Icon>control_point</Icon>
+                                    
+                                    <Icon>control_point</Icon>
+
                             </IconButton>
                     </div>
                 ),
@@ -134,20 +133,25 @@ const BrowseApp = () => {
     <div>
         <div className="m-sm-30">
             <div className="overflow-auto">
-                <div className="min-w-750">
+            <div className="hide-on-pc flex justify-end menu-button">
+                        <IconButton onClick={toggleSidenav}>
+                            <Icon className="">menu</Icon>
+                        </IconButton>
+            </div>
+                <div className="min-w-300">
                     <MUIDataTable
                         title={'Todos los terapeutas'}
                         data={therapistList}
                         columns={columns}
                         options={{
                             filterType: 'textField',
-                            responsive: 'standard',
+                            responsive: 'simple',
                             selectableRows: "none", // set checkbox for each row
                             //search: false, // set search option
                             filter: false, // set data filter option
                             download: false, // set download option
                             print: false, // set print option
-                            pagination: true, //set pagination option
+                            pagination: false, //set pagination option
                             viewColumns: false, // set column option
                             elevation: 0,
                             rowsPerPageOptions: [10, 20, 40, 80, 100],

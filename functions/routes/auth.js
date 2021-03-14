@@ -152,7 +152,7 @@ exports.createUserWithEmailAndPassword = (req, res) => {
             emailVerified: false,
             password: req.body.password,
             displayName: req.body.userdata.name,
-            photoURL: req.body.userdata.img || "    ",
+            photoURL: req.body.userdata.img || "",
             disabled: false,
         })
         .then( userRecord => {
@@ -190,7 +190,14 @@ exports.createUserWithEmailAndPassword = (req, res) => {
 
 exports.createTherapistWithEmailAndPassword = (req, res) => {
     auth
-        .createUserWithEmailAndPassword(req.body.email, req.body.password)
+        .createUser({
+            email: req.body.email,
+            emailVerified: false,
+            password: req.body.password,
+            displayName: req.body.userdata.name,
+            photoURL: req.body.userdata.img || "",
+            disabled: false,
+        })
         .then(user => {
             // subir a colleccion de usuarios
             thers
@@ -206,6 +213,14 @@ exports.createTherapistWithEmailAndPassword = (req, res) => {
                             console.log('Usuario registrado con rol "therapist" correctamente!');
                             return res.status(201).send(user);
                         })
+                        .catch( error => {
+                            console.error('Error asignando el rol de "therapist" al usuario', eror)
+                            return res.status(404).send(error);
+                        })
+                })
+                .catch( error => {
+                    console.error('Error registrando el usuario en collection "therapists"', error);
+                    return res.status(404).send(error);
                 })
         })
         .catch(error => {

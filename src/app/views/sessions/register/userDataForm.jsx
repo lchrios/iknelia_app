@@ -8,10 +8,7 @@ import {
     Stepper,
     Step,
     StepLabel,
-    Input, 
-    InputLabel, 
-    InputAdornment, 
-    FormControl,
+    InputAdornment,
     Icon,
     TextField,
     Divider,
@@ -19,8 +16,12 @@ import {
     Checkbox,
     FormControlLabel,
 } from '@material-ui/core'
+
+import firebase from 'firebase/app'
 import { Home, Image, Mail, Phone } from '@material-ui/icons'
 import clsx from 'clsx'
+import useAuth from 'app/hooks/useAuth'
+import history from '../../../../history'
 
 const getSteps = () =>{
     return ['Bienvenido', 'Contacto', 'Perfil']   
@@ -67,7 +68,8 @@ const UserDataForm = () => {
     const [activeStep, setActiveStep] = useState(0)
     const [content, setContent] = useState()
     const [message, setMessage] = useState("")
-    const [state, setState] = useState()
+    const [state, setState] = useState({img: "usuarios/placeholders/none-user.png"})
+    const { createUserWithEmailAndPassword, signInWithEmailAndPassword, assignUserRole } = useAuth();
 
     const handleChange = ({ target: { name, value } }) => {
         setState({
@@ -229,6 +231,49 @@ const UserDataForm = () => {
         } else if (activeStep == 2) {
             // TODO: enviar informacion a la base de datos e iniciar sesión
             console.log(state)
+            createUserWithEmailAndPassword(state)
+            .then( res => {
+                // * Aqui haces lo de que te mande a otro lado
+                try {
+                    signInWithEmailAndPassword(state.email, state.password).then(() => {
+                        var user = firebase.auth().currentUser
+        
+                    user.getIdTokenResult()
+                        .then( decodedToken => {
+                            switch (decodedToken.claims.role) {
+                                case "user":
+                                    history.push(`/${user.uid}/home`)
+                                    break;
+        
+                                case "therapist":
+                                    history.push(`/${user.uid}/dashboard`)
+                                    break;
+        
+                                case "admin":
+                                    history.push(`/${user.uid}/analytics`)
+                                    break;
+                        
+                                default:
+                                    console.error('No role was detected')
+                                    // TODO: if no role, set user role and redirect to home
+                                    assignUserRole(user.uid).then(() => {
+                                        history.push(`/${user.uid}/home`);
+                                        
+                                    });
+                                    break;   
+                            }
+                        })
+                        .catch( error => {
+                            console.error("Error al obtener el decodedToken del user", error)
+                        })
+                    })
+                    //history.push('/'+user.uid+'/dashboard')
+                } catch (e) {
+                    console.log(e)
+                    setMessage("No es posible iniciar sesión, Quizá tu contraseña sea incorrecta o es probable que no estés registrado. Intenta registrarte.")
+                    setLoading(false)
+                } 
+            })
         }
 
     }

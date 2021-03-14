@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 const cors = require('cors')
+const Multer = require('multer')
 
 // * Funciones de autenticacion
 const {
@@ -54,12 +55,20 @@ const {
   getAllBlogsByTherapist,
 } = require("./routes/blogs");
 
-//*Funciones de stripe
-  const { sendPaymentInfo, getSecret } = require("./routes/stripe");
+// * Funciones de stripe
+  const { 
+      sendPaymentInfo, 
+      handleStripeEvent, 
+} = require("./routes/stripe");
 
 // * uso de transformacion a json
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+
+const multer = Multer({
+    storage: Multer.MemoryStorage,
+    fileSize: 5 * 1024 * 1024
+});
 
 // * permisos del CORS
 app.use(cors());
@@ -93,6 +102,7 @@ app.get("/t/:tid/b", isAuthenticated, isAuthorized(roles.user), getAllBlogsByThe
 app.get("/t/:tid/u", isAuthenticated, isAuthorized(roles.therapist), getPatientsbyTherapist);
 app.get("/t/:tid/n", isAuthenticated, isAuthorized(roles.therapist), getNotesByTherapist);
 app.post("/t/:tid/n", isAuthenticated, isAuthorized(roles.therapist), newNote);
+app.post("/t/:tid/b", isAuthenticated, isAuthorized(roles.therapist), newBlog);
 
 // * rutas de usuario
 app.get("/u", isAuthenticated, isAuthorized(roles.admin), getAllUsers);
@@ -106,12 +116,11 @@ app.get("/u/:uid/image", getUserImage);
 
 //*rutas de stripe (lado user)
 app.post("/u/:uid/checkout", isAuthenticated, isAuthorized(roles.user), sendPaymentInfo);
-// app.get("/u/:uid/secret", isAuthenticated, isAuthorized(roles.user), getSecret);
+app.post("/webhook", handleStripeEvent);
 
 // * rutas de blogs
 app.get("/b", isAuthenticated, isAuthorized(roles.user), getAllBlogs);
 app.get("/b/:bid", isAuthenticated, isAuthorized(roles.user), getBlog);
-app.post("/b/new", isAuthenticated, isAuthorized(roles.therapist), newBlog);
 app.delete("/b/:bid", isAuthenticated, isAuthorized(roles.therapist), deleteBlog);
 app.put("/b/:bid", isAuthenticated, isAuthorized(roles.therapist), updateBlog);
 
@@ -130,21 +139,6 @@ app.post("/auth/signtherapist", createTherapistWithEmailAndPassword)
 app.put("/auth/:uid/admin", setAdmin);
 app.put("/auth/:uid/therapist", setTherapist);
 app.put("/auth/:uid/user", setUser);
-
-
-// * TEMP funtions
-
-app.post("/auth/restore/users/img", (req, res) => {
-    admin.firestore().collection("users").get()
-    .then( query => {
-        query.forEach( doc => {
-            doc.ref.update("img", "usuarios/placeholders/none-user.png").catch( er => {
-                console.error(er)
-            })
-        })
-        res.status(200).send("Usuarios actualizados");
-    })
-})
 
 
 // * export de la api

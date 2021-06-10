@@ -1,7 +1,7 @@
 const stripe = require('stripe')([
     "sk_test_51IRM5vEkM6QFZKw2N9Ow9xCKwSd2b8J3JjWb2BL9kH5FVCXvJ5fSmFW6GvJot90XsUdgSfbtpPraG5u9Kmycvi5C00HIcjkWgG",
     "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",
-][0]);
+][1]);
 
 
 // ~ 0 - stripe live mode 1-stripe-test 2 - testCLI @Secreto del endpoint webhook    
@@ -9,7 +9,7 @@ const endpoint_secret = [
     "whsec_fwfyWE5QTrOkBJZ7mEfU3LxgsOwhkpvy", // * Stripe LIVE
     "whsec_CObnwxUSvfRajVBO08viht8UpZNRXWhI", // * Stripe TEST
     "whsec_cNX97MfyLEMrl3JKqICh4FoGVDxWYB5g", // * temp local sig
-][1]; 
+][0]; 
 
 const { ContactsOutlined } = require('@material-ui/icons');
 const { admin, storage } = require('../firebase');
@@ -160,9 +160,9 @@ exports.handleStripeEvent = (req, res) => {
     }
 }
 
-exports.expressAccount = (req, res) => {
+exports.expressAccount = async (req, res) => {
     console.log('ejecutando función expressAccount')
-    const account = stripe.accounts.create({
+    const account = await stripe.accounts.create({
         "type": 'express',
         "email":req.body.email,
         "country": 'MX',
@@ -179,7 +179,7 @@ exports.expressAccount = (req, res) => {
         const host = [
             'http://localhost:3000', // * local emulator dev host
             'https://iknelia.app' // * cloud api host
-          ][0]
+          ][1]
         stripe.accountLinks.create({
             account: response.id,
             refresh_url: `${host}/${req.params.tid}/connectFailed`,
@@ -222,13 +222,13 @@ exports.connectFailed = (req,res) => {
     const host = [
         'http://localhost:3000', // * local emulator dev host
         'https://iknelia.app' // * cloud api host
-      ][0]
+      ][1]
 
     thers.doc(req.params.tid).get().then(doc => {
         console.log(doc.data().stripeId, 'connectFailedFunction')
         stripe.accountLinks.create({
             account: doc.data().stripeId,
-            refresh_url: `${host}/${req.params.tid}/connectFailed`,
+            refresh_url: `${host}/${req.params.tid}/connect`,
             return_url: `${host}/${req.params.tid}/dashboard`,
             type:"account_onboarding"
     

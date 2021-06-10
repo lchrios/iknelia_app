@@ -384,9 +384,14 @@ const TherapistDataForm = () => {
         setActiveStep(0)
     }
 
+
+    /**
+     * *Se comenta el useEffect por falta utilidad (aunque parece ser de seguridad, CHRIOS, ¿ES DE SEGURIDAD?)
+     */
     useEffect(() => {
         if (isAuthenticated) {
-            // history.push(`/${user.uid}/dashboard`)
+            history.push(`/${user.uid}/dashboard`)
+            console.log(state.email)
             api.post(`/t/${user.uid}/connect`,{
                 email:state.email,
             }).then(res => {
@@ -418,9 +423,19 @@ const TherapistDataForm = () => {
                     }
                 })
                 .then(res => {
-                    // if (res.status == 200) {
-                    //     history.push(`/${user.uid}/home`)
-                    //
+                    if (res.status == 200 && isAuthenticated) {
+                        history.push(`/${user.uid}/home`)
+                    // api.post(`/t/${user.uid}/connect`,{
+                    //     email:email,
+                    // }).then(res => {
+                    //     if(res.data.url) {
+                    //         window.location.href=res.data.url
+                    //     }
+                    // }). catch(e => {
+                    //     console.error(e, 'No hemos podido enviarte al dashboard de stripe')
+                    // })
+                    }
+                     
                 })
                 .catch( error => {
                     console.error("Error al actualizar la informacion", error)

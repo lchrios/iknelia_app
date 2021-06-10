@@ -277,8 +277,8 @@ const TherapistDataForm = () => {
                                         <HourglassEmpty/>
                                     </InputAdornment>
                                 )}}
-                                validators={['required']}
-                                errorMessages={['Ingresa tu dirección por favor']}
+                                validators={['required', 'minNumber:21','maxNumber:120']}
+                                errorMessages={['Es necesaria tu edad', 'Edad invalidad, eres menor de edad', 'Edad inválida, vamos no tienes más de 120 años']}
                             />
                         </div>
                     </Box>
@@ -359,12 +359,20 @@ const TherapistDataForm = () => {
             } else if(state.phone == "" || state.phone == undefined) {
                 setMessage('Ingresa tu número telefónico por favor')
             }else {
-                setActiveStep((prevActiveStep) => prevActiveStep + 1)}
+                setActiveStep((prevActiveStep) => prevActiveStep + 1)
+                setMessage("")}
         }else if (activeStep == 1) {
             if (state.cedula == "" || state.cedula == undefined) {
                 setMessage('Debes ingresar tu cédula profesional')
+            } else if (state.age == "" || state.age == undefined) {
+                setMessage('Debes ingresar una edad')
+            } else if (state.age < 18) {
+                setMessage('No cumples con la mayoría de edad')
+            } else if(isNaN(state.age)) {
+                setMessage('La edad capturada no es válida')
             } else {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
+                setMessage("")
             }
         }else if (activeStep == 2) {
         }

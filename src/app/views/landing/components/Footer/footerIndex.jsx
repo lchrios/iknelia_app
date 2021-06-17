@@ -1,5 +1,6 @@
 import React from 'react'
-import {FaFacebook, FaInstagram, FaYoutube} from 'react-icons/fa'
+import history from '../../../../../history'
+import {FaFacebook, FaInstagram} from 'react-icons/fa'
 import {
     FooterContainer,
     FooterWrap, 
@@ -24,13 +25,15 @@ export const Footer = () => {
                     <FooterLinksWrapper>
                         <FooterLinkItems>
                             <FooterLinkTitle> Sobre nosotros  </FooterLinkTitle>
-                            <FooterLink to="/signin">Registrate</FooterLink>
-                                <FooterLink to="/blogs">Conoce más</FooterLink>
-                                <FooterLink to="/therapists">Especialistas</FooterLink>
-                                <FooterLink to="/">Contacto</FooterLink>
+                                <FooterLink to="/session/signup" onClick={() => history.push('/session/signup')}>Registrate</FooterLink>
+                                <FooterLink to='/blogs' onClick={() => {history.push('/blogs')}}>Conoce más</FooterLink>
+                                <FooterLink to="/therapists" onClick={() => history.push('/therapists')}>Especialistas</FooterLink>
+                                <SocialLogo to='/'>
+                                    Iknelia
+                                </SocialLogo>
                         </FooterLinkItems>
                     </FooterLinksWrapper>
-                    <FooterLinksWrapper>
+                    {/* <FooterLinksWrapper>
                         <FooterLinkItems>
                             <FooterLinkTitle> Uso de datos  </FooterLinkTitle>
                                 <FooterLink to="/signin">Registrate</FooterLink>
@@ -56,17 +59,12 @@ export const Footer = () => {
                                 <FooterLink to="/therapists">Especialistas</FooterLink>
                                 <FooterLink to="/">Contacto</FooterLink>
                         </FooterLinkItems>
-                    </FooterLinksWrapper>
+                    </FooterLinksWrapper> */}
                 </FooterLinksContainer>
                 <SocialMedia>
                     <SocialMediaWrap>
-                        <SocialLogo to='/'>
-                            Iknelia
-                        </SocialLogo>
-                        <WebsiteRights>
-                            Derechos de autor {new Date().getFullYear() } todos los derechos reservados.
-                        </WebsiteRights>
                         <SocialIcons>
+                            <FooterLinkTitle>Vistianos en</FooterLinkTitle>
                             <SocialIconLink href="https://www.facebook.com/ikneliacontigo/" target="_blank" aria-label="Facebook">
                                 <FaFacebook />
                             </SocialIconLink>
@@ -74,6 +72,9 @@ export const Footer = () => {
                                 <FaInstagram />
                             </SocialIconLink>
                         </SocialIcons>
+                        <WebsiteRights>
+                            Derechos de autor {new Date().getFullYear() } todos los derechos reservados. Aplicación desarrollada por {<FooterLink>q-soft ®</FooterLink>}.
+                        </WebsiteRights>
                     </SocialMediaWrap>
                 </SocialMedia>
             </FooterWrap>

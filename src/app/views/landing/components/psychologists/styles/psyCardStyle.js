@@ -7,7 +7,7 @@ import {
   
   const psyCardStyle = {
     section: {
-      padding: "70px 0",
+      padding: "80px 0",
       display:"grid",
       textAlign: "center",
       marginLeft:"40px",

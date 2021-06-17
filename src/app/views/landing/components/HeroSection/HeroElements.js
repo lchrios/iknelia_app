@@ -34,6 +34,8 @@ export const HeroContainer = styled.div`
 export const HeroBg = styled.div`
     position:absolute;
     top:0;
+    background:black;
+    opacity:70%;
     right:0;
     bottom:0;
     left:0;

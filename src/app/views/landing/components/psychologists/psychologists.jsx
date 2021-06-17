@@ -8,7 +8,6 @@ import GridItem from "./elements/GidItem";
 import Card from "../eachComponent/components/Card/Card";
 import CardHeader from "../eachComponent/components/Card/CardHeader";
 import CardBody from "../eachComponent/components/Card/CardBody";
-import CardFooter from "../eachComponent/components/Card/CardFooter";
 import Button from "../eachComponent/components/CustomButtons/Button";
 import Violeta from "assets/images/psicólogos/Violeta.PNG";
 import Sandra from "assets/images/psicólogos/Sandra.PNG";
@@ -40,7 +39,7 @@ export default function PsySection() {
               <Card profile plain className={classes.card3}>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={6}>
-                    <CardHeader image plain>
+                    <CardHeader className={classes.psyCardStyle} image plain>
                       <a href="#pablo" onClick={e => e.preventDefault()}>
                         <img src={Violeta} alt="..." />
                       </a>

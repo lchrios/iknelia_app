@@ -2,18 +2,18 @@ import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
 export const FooterContainer = styled.footer`
-background-color:#00009C;
-
+background-color:#1c35c3;
+align-items:center;
+justify-content:center; 
 `
 
 export const FooterWrap = styled.div`
 padding: 40px 24px;
 display:flex;
-flex-direction: column;
+flex-direction: row;
 justify-content: center;
 align-items:center;
-max-width: 1100px;
-margin:0 auto;
+/* margin:0 auto; */
 `
 
 export const FooterLinksContainer = styled.div`
@@ -23,7 +23,7 @@ justify-content: center;
 
 @media screen and (max-width: 720px){
     padding-top:32px;
-    flex-direction:column; /*que se pongan dos y dos columnas pendejo */
+    flex-direction:column; 
 }
 `
 export const FooterLinksWrapper =  styled.div`
@@ -54,6 +54,7 @@ color: #fff;
 export const FooterLinkTitle = styled.h1`
  font-size:18px;
  margin-bottom:16px;
+ color:white;
 
 `
 export const FooterLink = styled(Link)`
@@ -70,15 +71,15 @@ export const FooterLink = styled(Link)`
 `
 
 export const SocialMedia =  styled.section`
-max-width: 1000px;
-width: 100%;
+justify-content:center;
+/* max-width: 1000px; */
+/* width: 100%; */
 
 `
 export const  SocialMediaWrap = styled.div`
-display:flex;
 justify-content: space-between;
 align-items:center;
-max-width: 1100px;
+/* max-width: 1100px; */
 margin: 40px auto 0 auto;
 
 @media screen and (max-width: 820px) {
@@ -106,7 +107,7 @@ export const WebsiteRights = styled.small`
 
 `
 export const SocialIcons =  styled.div`
- display:flex;
+ display:column;
  justify-content: space-between;
  align-items:center;
  width:240px;
@@ -115,4 +116,5 @@ export const SocialIcons =  styled.div`
 export const SocialIconLink = styled.a`
  color:#fff;
  font-size: 24px;
+ margin:10px;
 `

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Video from '../../../../../assets/videos/relax women.mp4';
+// import Video from '../../../../../assets/videos/relax women.mp4';
 import Banner from '../../../../../assets/images/FOTOS LANDING PAGE/Banner inicio.png'
 import history from '../../../../../history';
-import { HeroContainer, HeroBg, VideoBg, HeroBanner } from './HeroElements';
+import { HeroContainer, HeroBg, HeroBanner } from './HeroElements';
 import { HeroContent, HeroH1, HeroP, HeroBtnWrapper, ArrowForward, ArrowRight } from './HeroElements';
 import { Button } from '../buttonElement_sc';
 import useAuth from 'app/hooks/useAuth';

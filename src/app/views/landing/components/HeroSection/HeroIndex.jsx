@@ -21,7 +21,7 @@ const HeroSection = () => {
                 {/* *Se deja el videoBg comentado porque originalmente se utilizaría este tipo de contenido para la landing page, en caso de reutilziarse el video */}
                 {/* <VideoBg  autoPlay loop muted src= { Video } type='video/mp4'/> */}
                 <HeroBanner src={Banner} />
-            </HeroBg>
+            </HeroBg>   
             <HeroContent>
                 <HeroH1>Empieza a vivir con la libertad que mereces</HeroH1>
                 <HeroP>Iknelia está contigo</HeroP>

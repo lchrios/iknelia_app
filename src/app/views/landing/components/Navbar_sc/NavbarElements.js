@@ -31,7 +31,7 @@ export const NavbarContainer = styled.div`
 `;
 
 export const NavLogo = styled(LinkRouter)`
- color:${({scrollNav}) => (scrollNav ? 'white' : 'black')};
+ color:${({scrollNav}) => (scrollNav ? 'black' : 'black')};
 
  justify-self: flex-start;
  cursor:pointer;
@@ -81,7 +81,7 @@ export const NavItem = styled.li`
 `
 
 export const NavLinks = styled(LinkScroll)`
-color:${({scrollNav}) => (scrollNav ? 'white' : 'black')};
+color:${({scrollNav}) => (scrollNav ? 'black' : 'black')};
 display:flex;
 align-items:center;
 text-decoration:none;

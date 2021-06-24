@@ -6,6 +6,7 @@ import TherapistDataForm from './register/TherapistDataForm'
 import TherapistFirebaseRegister from './register/TherapistFirebaseRegister'
 import UserDataForm from './register/userDataForm'
 import Forbidden from './Forbidden'
+import SessionMaintenance from './SessionMaintenance';
 
 const sessionRoutes = [
     {
@@ -40,6 +41,10 @@ const sessionRoutes = [
         path: '/session/403',
         component: Forbidden,
     },
+    {
+        path: '/session/maintenance',
+        component: SessionMaintenance
+    }
 ]
 
 export default sessionRoutes

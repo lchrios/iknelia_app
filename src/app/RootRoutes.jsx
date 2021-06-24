@@ -42,6 +42,12 @@ const errorRoute = [
     },
 ]
 
+const maintenance = [
+  {
+    component: () => <Redirect to="/session/maintenance"/>
+  }
+]
+
 const routes = [
     /*...adminRoutes,
     ...materialRoutes,
@@ -69,6 +75,7 @@ const routes = [
     ...therapistRoutes,
     ...landingRoutes,
     ...errorRoute,
+    ...maintenance
 ]
 
 export default routes

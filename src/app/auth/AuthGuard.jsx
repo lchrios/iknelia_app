@@ -40,6 +40,11 @@ const AuthGuard = ({ children }) => {
         user
     } = useAuth()
 
+    /** 
+     * * La constante mSwitch es un acrónimo de maintenance switch, al cambiar a true, será redireccionado el usuario a una pantalla de mantenimiento siempre que inicie sesión
+     */
+    const mSwitch = true;
+    const [maintenance, setMaintenance] = useState(false)
     const [previouseRoute, setPreviousRoute] = useState(null)
     const { pathname } = useLocation()
 
@@ -54,6 +59,13 @@ const AuthGuard = ({ children }) => {
     // let authenticated = isAuthenticated
 
     useEffect(() => {
+        if (mSwitch) {
+            setMaintenance(true)
+       } else {
+           console.log('Switch de mantenimiento apagado')
+       }
+    })
+    useEffect(() => {
         if (previouseRoute !== null) setPreviousRoute(pathname)
     }, [pathname, previouseRoute])
 
@@ -62,7 +74,17 @@ const AuthGuard = ({ children }) => {
         setIsUserRoleAuthenticated(getUserRoleAuthStatus(pathname, user, routes));
     }, [user])
 
-    if (authenticated) return <>{children}</>
+    if(maintenance) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/session/maintenance',
+                    state: { redirectUrl: previouseRoute },
+                }}
+            />
+        )
+    }
+    else if (authenticated) return <>{children}</> 
     else {
         return (
             <Redirect

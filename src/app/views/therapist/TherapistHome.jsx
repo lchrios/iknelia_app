@@ -104,18 +104,18 @@ const TherapistHome = () => {
         .then(res => {
             console.log(res, 'reAuth')
             if (res.data == false) {
-                console.log('No existe una cuenta')
+                // console.log('No existe una cuenta')
                 setStripe(res.data)
                 finishReq()
             } else if ((res.data.details_submitted == false) && (res.data.charges_enabled == false)) {
-                console.log('No se han completado los datos en stripe o no existe una cuenta, y por lo tanto no están disponibles los cargos')
+                // console.log('No se han completado los datos de registro en stripe, y por lo tanto no están disponibles los cargos')
                 setStripeId(res.data.id)
                 setStripeDetails(res.data.details_submitted);
                 setStripeCharges(res.data.charges_enabled)
                 setStripe(false)
                 finishReq()
             } else if (res.data.charges_enabled && res.data.details_submitted) {
-                console.log('Cargos disponibles')
+                // console.log('Cargos disponibles')
                 setStripeId(res.data.id)
                 setStripeDetails(res.data.details_submitted)
                 setStripeCharges(res.data.charges_enabled)

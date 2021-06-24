@@ -3,6 +3,7 @@ import maintenance from '../../../../assets/images/maintenance/SESSION-MANTENIMI
 import {makeStyles} from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { Button } from '@material-ui/core';
+import history from '../../../../history'
 
 const useStyles = makeStyles({
     root: {
@@ -51,7 +52,10 @@ const classes = useStyles();
                         alt='mantenimiento'/>
                     </div>
                     <div className={classes.button}>
-                        <Button variant="contained" color='secondary'>Volver al inicio</Button>
+                        <Button 
+                        variant="contained" 
+                        color='secondary'
+                        onClick={() => history.push('/home')}>Volver al inicio</Button>
                     </div>
                 </Grid>
             </Grid>

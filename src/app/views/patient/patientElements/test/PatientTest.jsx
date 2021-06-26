@@ -7,14 +7,14 @@ import {
     Stepper,
     Grid,
 } from '@material-ui/core'
-import history from '../../../../../history'
+// import history from '../../../../../history'
 import FormTest from './steps/FormTest'
 import FormTestSt2 from './steps/FormTestSt2'
 import FormTestSt3 from './steps/FormTestSt3'
 import PreTest from './steps/PreTest'
 import SessionValidatorForm from './steps/SessionValidatorForm'
 import useAuth from 'app/hooks/useAuth'
-import { Loading } from 'app/components/Loading/Loading'
+// import { Loading } from 'app/components/Loading/Loading'
 import api from 'app/services/api'
 
 
@@ -94,9 +94,9 @@ const PatientTest = ({ loading, therapist, toggleHide }) => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
     }
 
-    const handleReset = () => {
-        setActiveStep(0)
-    }
+    // const handleReset = () => {
+    //     setActiveStep(0)
+    // }
     
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {

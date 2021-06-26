@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import history from '../../../../../../history'
-import man from 'assets/images/avatars/001-man.svg'
+// import man from 'assets/images/avatars/001-man.svg'
 import useAuth from 'app/hooks/useAuth'
 
 const usestyles = makeStyles(({ palette, ...theme }) => ({

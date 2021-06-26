@@ -1,19 +1,22 @@
 import 'date-fns';
-import { Card, Grid, Icon, Button, Snackbar, IconButton, SnackbarContent } from '@material-ui/core'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-import ScheduleSelector from 'react-schedule-selector'
-import DateFnsUtils from '@date-io/date-fns';
-import NumericInput from 'react-numeric-input';
-import SaveIcon from '@material-ui/icons/Save';
-import api from 'app/services/api';
-import useAuth from 'app/hooks/useAuth';
-import { Loading } from 'app/components/Loading/Loading';
+import { Card, Grid } from '@material-ui/core'
+// import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import React from 'react'
+// import PropTypes from 'prop-types'
+import { TextValidator } from 'react-material-ui-form-validator'
+// import ScheduleSelector from 'react-schedule-selector'
+// import DateFnsUtils from '@date-io/date-fns';
+// import NumericInput from 'react-numeric-input';
+// import SaveIcon from '@material-ui/icons/Save';
+// import api from 'app/services/api';
+// import useAuth from 'app/hooks/useAuth';
+// import { Loading } from 'app/components/Loading/Loading';
 
-const SessionResume = ({ therapist, setMessage, handleNext, state, handleChange }) => {
-    const { user } = useAuth() 
+const SessionResume = ({ therapist, state, handleChange }) => {
+    /**
+     * * Nunca se usa el user
+     */
+    // const { user } = useAuth() 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', };
 
     return (

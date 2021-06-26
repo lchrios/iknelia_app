@@ -1,3 +1,7 @@
+/**
+ * *Todo este codigo se comenta porque aparentemente no está en uso
+ */
+
 import React, { useState, useEffect } from 'react'
 import { Dialog, IconButton, Button, Icon, Grid } from '@material-ui/core'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'

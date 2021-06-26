@@ -16,7 +16,7 @@ const {user} = useAuth();
             setBlogs(res.data)
             setLoading(false)
         })
-    },[])
+    },[user])
     
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/core/styles'
+// import {makeStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import {Button} from '../buttonElement_sc'
 import {
@@ -14,11 +14,11 @@ import {
   Subtitle, 
   BtnWrapper} from './InfoElements'
   import terapia1 from '../../../../../../src/assets/images/FOTOS LANDING PAGE/IMG_4300.PNG'
-  import InterestedSectionStyle from '../../landingBlog/landingBlogStyles/lessImpBlogStyles'
+//   import InterestedSectionStyle from '../../landingBlog/landingBlogStyles/lessImpBlogStyles'
   import Card from '../../landingBlog/components/card'
   import CardHeader from '../../landingBlog/components/cardHeader'
 
-const useStyles = makeStyles(InterestedSectionStyle);
+// const useStyles = makeStyles(InterestedSectionStyle);
 
 export const InfoSection = ({
   lightText, 
@@ -36,7 +36,7 @@ export const InfoSection = ({
   primary,
   dark, 
   dark2 }) => {
-    const classes = useStyles();
+    // const classes = useStyles();
 
     return (
         <InfoContainer lightBg = {lightBg } id={id} >

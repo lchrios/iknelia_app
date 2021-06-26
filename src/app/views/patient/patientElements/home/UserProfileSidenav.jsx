@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import history from '../../../../../history';
 import { Avatar, Button, Card, CircularProgress, Grid, Icon} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import useAuth from 'app/hooks/useAuth'
-import api from 'app/services/api';
+// import api from 'app/services/api';
 import { Loading } from 'app/components/Loading/Loading';
 
 const usestyles = makeStyles(({ palette, ...theme }) => ({
@@ -34,29 +34,29 @@ const UserProfileSidenav = ({ therapist, loading, url }) => {
     const classes = usestyles();
     
 //funciones de control abierto-cerrado
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
 
-    function handleClickOpen() {
-        setOpen(true)
-    }
+    // function handleClickOpen() {
+    //     setOpen(true)
+    // }
     
-    function handleClose() {
-        setOpen(false)
-    }
+    // function handleClose() {
+    //     setOpen(false)
+    // }
 
-    const [openS, setOpenS] = useState(false)
+    // const [openS, setOpenS] = useState(false)
 
-    function handleClick() {
-        setOpenS(true)
-    }
+    // function handleClick() {
+    //     setOpenS(true)
+    // }
     
-    function handleCloseSnack(event, reason) {
-        if (reason === 'clickaway') {
-            return
-        }
+    // function handleCloseSnack(event, reason) {
+    //     if (reason === 'clickaway') {
+    //         return
+    //     }
 
-        setOpen(false)
-    }
+    //     setOpen(false)
+    // }
 
 
     return (
@@ -78,7 +78,7 @@ const UserProfileSidenav = ({ therapist, loading, url }) => {
                             </div>
                             <div>
                                 <p className="uppercase mb-1">Telefono</p>
-                                <a className="font-medium h5">{user.phone}</a>
+                                <a className="font-medium h5" href={user.phone} >{user.phone}</a>
                             </div>
                             <div />
                         </div>
@@ -120,7 +120,13 @@ const UserProfileSidenav = ({ therapist, loading, url }) => {
                     <div className="py-4" />
                     { loading ? <Grid container direction="column" alignItems="center"><Grid item><CircularProgress /></Grid></Grid> :
                         <div className="flex items-center justify-center text-primary" style={{ display: therapist !== undefined ? "block" : "none" }}>
-                            <Button onClick={() => {
+                            <Button onClick={() => { history.push(() => {
+                                if(therapist.zoomurl !== undefined){
+                                     return therapist.zoomurl
+                                } else {
+                                    console.log('No hay url de terapeuta');
+                                };
+                                });
                                 // window.location.href = therapist.zoomurl !== undefined  ? therapist.zoomurl : "https://zoom.us/j/95739401999?pwd=dkh2NGQxcXBTYWJWRHlRM3U4UnVPQT09"  
                             }}>
                                 <Icon>sentiment_very_satisfied</Icon>

@@ -1,40 +1,44 @@
 import React, { Fragment, useState, useEffect } from "react";
-import {Button, Icon, IconButton,  useMediaQuery, Hidden  } from "@material-ui/core";
+import {Button, useMediaQuery} from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/styles"
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
-import {
-    MatxSidenavContainer,
-    MatxSidenav,
-    MatxSidenavContent,
-} from 'app/components'
+// import clsx from 'clsx'
+// import { makeStyles } from '@material-ui/core/styles'
+// import {
+//     MatxSidenavContainer,
+//     MatxSidenav,
+//     MatxSidenavContent,
+// } from 'app/components'
 import BrowseApp from './patientElements/browse/BrowseApp';
-import UserProfileSidenav from './patientElements/home/UserProfileSidenav'
+// import UserProfileSidenav from './patientElements/home/UserProfileSidenav'
 import useAuth from 'app/hooks/useAuth'
 import history from '../../../history'
 
 
-const useStyles = makeStyles(({ palette, ...theme }) => ({
-    headerBG: {
-        height: 345,
-        '@media only screen and (max-width: 959px)': {
-            height: 0,
-        },
-    },
-}))
+// const useStyles = makeStyles(({ palette, ...theme }) => ({
+//     headerBG: {
+//         height: 345,
+//         '@media only screen and (max-width: 959px)': {
+//             height: 0,
+//         },
+//     },
+// }))
 
 const PatientBrowse = () => {
     const [open, setOpen] = useState(true)
-
+    /**
+     * *  console log de open para evitar el warning en consola, pero parece ser que este hook no se utiliza
+     */
+    console.log(open)
+    
     const { user } = useAuth()
 
     const theme = useTheme()
-    const classes  = useStyles()
+    // const classes  = useStyles()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-    const toggleSidenav = () => {
-        setOpen(!open)
-    }
+    // const toggleSidenav = () => {
+    //     setOpen(!open)
+    // }
 
     useEffect(() => {
         if (isMobile) setOpen(false)

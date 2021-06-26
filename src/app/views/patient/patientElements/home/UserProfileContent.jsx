@@ -13,7 +13,7 @@ import PatientTest from '../test/PatientTest'
 import TherapistInfoUser from './user-profile-content/TherapistInfoUser'
 import PatientCalendar from '../calendar/PatientCalendar'
 import useAuth from 'app/hooks/useAuth';
-import CheckoutApp from '../changePayMeth/CheckoutApp';
+// import CheckoutApp from '../changePayMeth/CheckoutApp';
 import { Loading } from 'app/components/Loading/Loading';
 
 

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Dialog, IconButton, Button, Icon, Grid, Card, Stepper, Step, StepLabel } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
-import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
+import { ValidatorForm } from 'react-material-ui-form-validator'
+// import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
 import 'date-fns'
-import DateFnsUtils from '@date-io/date-fns'
-import { addNewEvent, updateEvent, deleteEvent } from './CalendarService'
-import useAuth from 'app/hooks/useAuth'
-import PaymentMenu from './PaymentMenu'
-import api from 'app/services/api'
-import { Loading } from 'app/components/Loading/Loading'
+// import DateFnsUtils from '@date-io/date-fns'
+// import { addNewEvent, updateEvent, deleteEvent } from './CalendarService'
+// import useAuth from 'app/hooks/useAuth'
+// import PaymentMenu from './PaymentMenu'
+// import api from 'app/services/api'
+// import { Loading } from 'app/components/Loading/Loading'
 import PaymentSchedule from './paymentSteps/PaymentSchedule'
 import SessionResume from './paymentSteps/SessionResume'
 import CheckoutApp from '../changePayMeth/CheckoutApp'
@@ -71,9 +71,9 @@ const ScheduleSession = ({ open, handleClose, therapist, tid }) => {
     const [message, setMessage] = useState("");
     const [back, setBack] = useState(false);
 
-    useEffect(() => {
-        console.log(state)
-    },[state])
+    // useEffect(() => {
+    //     console.log(state)
+    // },[state])
 
     const handleChange = (event) => {
         console.log(event.target.name)
@@ -87,7 +87,10 @@ const ScheduleSession = ({ open, handleClose, therapist, tid }) => {
     }
 
     const handleFormSubmit = () => {
-        let { id } = state
+        /**
+         * ! ERROR 1
+         */
+        // let { id } = state
 
         // TODO: Hacer el pago
         // TODO: subir la session si el pago con tarjeta fue exitoso
@@ -285,24 +288,5 @@ const ScheduleSession = ({ open, handleClose, therapist, tid }) => {
         </Dialog>
     )
 }
-
-const paymentOptions = [
-    {
-        label: 'PayPal',
-        src: 'assets/images/payment-methods/paypal.png'
-    },
-    {
-        label: 'Visa',
-        src: 'assets/images/payment-methods/visa.png'
-    },
-    {
-        label: 'MasterCard',
-        src: 'assets/images/payment-methods/master-card.png'
-    },
-    {
-        label: 'Depósito en oxxo',
-        src: 'assets/images/payment-methods/oxxo.png'
-    },
-]
 
 export default ScheduleSession

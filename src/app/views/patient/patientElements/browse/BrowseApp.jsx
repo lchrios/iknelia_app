@@ -17,7 +17,6 @@ const BrowseApp = ({ toggleSidenav }) => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        
         api.get('/t').then(res => {
             setTherapistList(res.data.data)
             setDocRefs(res.data.id)
@@ -31,7 +30,7 @@ const BrowseApp = ({ toggleSidenav }) => {
             })
         })
 
-    }, [])
+    }, [user.uid])
     
 
     const columns = [

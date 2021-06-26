@@ -52,7 +52,13 @@ export default function CheckoutDialog({therapist, tid, state}) {
 
 
     function handleBack() {
-        {activeStep === 1 ? setActiveStep(prevActiveStep => prevActiveStep - 1) : setActiveStep(prevActiveStep => prevActiveStep - 2)}
+        if (activeStep === 1) {
+            setActiveStep(prevActiveStep => prevActiveStep -1)
+        } else if(activeStep === 2) {
+            setActiveStep(prevActiveStep => prevActiveStep - 2)
+        } else {
+            console.log('Estás en un paso que aún no está en el código (paradoja) ActiveStep:',activeStep)
+        }
     }
 
     function handleChangeName(event) {

@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Card,
-    TextField,
     Divider,
 } from '@material-ui/core'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
@@ -43,7 +42,7 @@ const FormTest = ({ state, handleChange, handleNext }) => {
                         }
                     >
                         {stayDurationList.map((duration, index) => (
-                            <option key={duration} value={index == 0 ? undefined : duration}>
+                            <option key={duration} value={index === 0 ? undefined : duration}>
                                 {duration}
                             </option>
                         ))}

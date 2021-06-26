@@ -9,7 +9,10 @@ const SessionsHistory = ({toggleSidenav}) => {
 
     const theme = useTheme();
     const [orderList, setOrderList] = useState()
-    const [idList, setIdList] = useState();
+    /**
+     * *Originalmente estaba comentado el hijo del objeto columns que muestra el id list
+     */
+    // const [idList, setIdList] = useState();
     const [loading, setLoading] = useState(true)
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -20,10 +23,10 @@ const SessionsHistory = ({toggleSidenav}) => {
         api.get('/u/'+user.uid+'/s')
             .then(res => {
                 setOrderList(res.data.data)
-                setIdList(res.data.id)
+                // setIdList(res.data.id)
                 setLoading(false)
             })    
-    }, [])
+    }, [user.uid])
     
 
     const columns = [
@@ -101,7 +104,10 @@ const SessionsHistory = ({toggleSidenav}) => {
             options: {
                 filter: true,
                 customBodyRenderLite: (dataIndex) => {
-                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    /** 
+                     * * No se usa esta variable
+                    */
+                    // const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                     return (<span className="ellipsis pr-5">
                         {new Date(new Date(orderList[dataIndex].start).getTime() + (new Date().getTimezoneOffset() * 60000)).toTimeString()}
                     </span>)

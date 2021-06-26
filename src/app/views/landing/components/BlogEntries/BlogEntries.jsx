@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
@@ -16,7 +16,7 @@ import {
     coloredShadow,
     grayColor
   } from "../../landingBlog/landingBlogStyles/assets";
-import useAuth from "app/hooks/useAuth";
+// import useAuth from "app/hooks/useAuth";
 import { Loading } from "app/components/Loading/Loading";
 import { Grid } from "@material-ui/core";
 
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
 
 export default function BlogEntriesCards({blogs, loading}) {
     const classes = useStyles();
-    const [render, setRender] = useState(<p className="m-5 text-primart">No hay entradas de blog disponibles</p>)
+    // const [render, setRender] = useState(<p className="m-5 text-primart">No hay entradas de blog disponibles</p>)
     const images = [terapia, terapia1, terapia2];
 
     useEffect(() =>{

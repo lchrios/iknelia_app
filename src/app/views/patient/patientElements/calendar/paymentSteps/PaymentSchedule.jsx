@@ -1,14 +1,14 @@
 import 'date-fns';
-import { Card, Grid, Icon, Button, Snackbar, IconButton, SnackbarContent } from '@material-ui/core'
+import { Card, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
+// import PropTypes from 'prop-types'
+// import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import ScheduleSelector from 'react-schedule-selector'
 import DateFnsUtils from '@date-io/date-fns';
-import NumericInput from 'react-numeric-input';
-import SaveIcon from '@material-ui/icons/Save';
+// import NumericInput from 'react-numeric-input';
+// import SaveIcon from '@material-ui/icons/Save';
 import api from 'app/services/api';
 import useAuth from 'app/hooks/useAuth';
 import { Loading } from 'app/components/Loading/Loading';
@@ -30,14 +30,14 @@ const PaymentSchedule = ({ setMessage, handleNext, state, setState, hasSched, se
         startDate: new Date(),
         numDays: 5,
         hourlyChunks: 1,
-        minTime: 5, // ? Preguntar a Esquivias minimo
-        maxTime: 23, // ? Preguntar a Esquivias maximo
+        minTime: 5, 
+        maxTime: 23,
     }) 
 
     const handleChange = newSchedule => {
         
         var selected = state.schedule.filter(x => newSchedule.indexOf(x) === -1);
-        if (selected.length == 1) {
+        if (selected.length === 1) {
             setState({
                 ...state,
                 date: selected[0].toISOString(),
@@ -50,7 +50,7 @@ const PaymentSchedule = ({ setMessage, handleNext, state, setState, hasSched, se
         if (state?.date && !back) {
             handleNext();
         }
-    }, [state])
+    }, [state, back, handleNext])
 
     useEffect(() => {
         if (!back) {
@@ -73,7 +73,7 @@ const PaymentSchedule = ({ setMessage, handleNext, state, setState, hasSched, se
                 console.error(er);
             })
         }
-    }, [])
+    }, [back, user.uid, setMessage, setHasSched, setState, state])
     
     const handleDate = date => {
         setOptions({

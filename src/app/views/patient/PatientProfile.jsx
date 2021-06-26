@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import UserProfileContent from './patientElements/home/UserProfileContent'
 import UserProfileSidenav from './patientElements/home/UserProfileSidenav'
-import { getTherapist, getSessions } from 'app/services/functions/UserService'
+import { getSessions } from 'app/services/functions/UserService'
 import useAuth from 'app/hooks/useAuth'
 import api from 'app/services/api'
 
@@ -121,6 +121,9 @@ const PatientProfile = () => {
                                 <Icon className="text-white mt-2">clear</Icon>
                             </IconButton>
                         </Hidden>
+                    </div>
+                    <div>
+                        Hola
                     </div>
                     <UserProfileSidenav therapist={therapist} loading={loading} url={url}/>
                 </MatxSidenav>

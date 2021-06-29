@@ -35,27 +35,29 @@ const Navbar = ({ toggle }) => {
     const toggleHome = () => {
         scroll.scrollToTop();
     };
-    
+    /**
+     * *La propiedad scrollnav estaba siendo enviada al DOM, y para evitar eso se agrega el signo de dolar para convertirla en una propiedad transient de styled components
+     */
     return (
         <>
-            <Nav scrollNav = {scrollNav}>
+            <Nav $scrollnav = {scrollNav}>
                 <NavbarContainer>
-                    <NavLogo scrollNav={scrollNav} to='/home'>Iknelia</NavLogo>
+                    <NavLogo $scrollnav={scrollNav} to='/home'>Iknelia</NavLogo>
                     <MobileIcon onClick={toggleHome && toggle}>
                         <FaBars />
                     </MobileIcon>
                     <NavMenu>
                         <NavItem >
-                            <NavLinks scrollNav={scrollNav} to='/home' onClick={() => {history.push('/home')}}> Inicio </NavLinks>
+                            <NavLinks $scrollnav={scrollNav} to='/home' onClick={() => {history.push('/home')}}> Inicio </NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks scrollNav={scrollNav} to='/blogs' onClick={() => {history.push('/blogs')}}>Blog</NavLinks>
+                            <NavLinks $scrollnav={scrollNav} to='/blogs' onClick={() => {history.push('/blogs')}}>Blog</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks scrollNav={scrollNav} to='/therapists' onClick={() => {history.push('/therapists')}}>Psicólogos</NavLinks>
+                            <NavLinks $scrollnav={scrollNav} to='/therapists' onClick={() => {history.push('/therapists')}}>Psicólogos</NavLinks>
                         </NavItem>
                         { !isAuthenticated ? <NavItem>
-                            <NavLinks scrollNav={scrollNav} to='/session/signup' onClick={() => {history.push('/session/signup')}}>Comienza ahora</NavLinks>
+                            <NavLinks $scrollnav={scrollNav} to='/session/signup' onClick={() => {history.push('/session/signup')}}>Comienza ahora</NavLinks>
                         </NavItem> : null}
                         { user 
                         ?   <NavBtn to='/session/signin'>

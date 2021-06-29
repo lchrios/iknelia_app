@@ -73,7 +73,7 @@ export const Footer = () => {
                             </SocialIconLink>
                         </SocialIcons>
                         <WebsiteRights>
-                            Derechos de autor {new Date().getFullYear() } todos los derechos reservados. Aplicación desarrollada por {<FooterLink>q-soft ®</FooterLink>}.
+                            Derechos de autor {new Date().getFullYear() } todos los derechos reservados. Aplicación desarrollada por {<FooterLink to="">q-soft ®</FooterLink>}.
                         </WebsiteRights>
                     </SocialMediaWrap>
                 </SocialMedia>

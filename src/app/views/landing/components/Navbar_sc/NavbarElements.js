@@ -3,7 +3,7 @@ import {Link as LinkRouter} from 'react-router-dom'
 import {Link as LinkScroll} from 'react-router-dom'
 
 export const Nav = styled.nav `
- background: ${ ( {scrollNav} )  => (scrollNav ? '#1C35C3' : '#E4Cff5')};
+ background: ${ ( {$scrollnav} )  => ($scrollnav ? '#1C35C3' : '#E4Cff5')};
  height:80px;
  margin-top: -80px;
  display:flex;
@@ -30,8 +30,8 @@ export const NavbarContainer = styled.div`
  max-width:1100px;
 `;
 
-export const NavLogo = styled(LinkRouter)`
- color:${({scrollNav}) => (scrollNav ? 'white' : 'black')};
+export const NavLogo = styled(LinkScroll)`
+color:${({$scrollnav}) => ($scrollnav ? 'white' : 'black')};
 
  justify-self: flex-start;
  cursor:pointer;
@@ -81,7 +81,7 @@ export const NavItem = styled.li`
 `
 
 export const NavLinks = styled(LinkScroll)`
-color:${({scrollNav}) => (scrollNav ? 'white' : 'black')};
+color:${({$scrollnav}) => ($scrollnav ? 'white' : 'black')};
 display:flex;
 align-items:center;
 text-decoration:none;

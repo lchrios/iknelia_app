@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const EditBlogForm = () => {
     const classes = useStyles()
     const [entry, setEntry] = useState();
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const { user } = useAuth()
 
     const search = useLocation().search
@@ -37,9 +37,9 @@ const EditBlogForm = () => {
         api.get("/b/" + bid)
             .then(res => {
                 setEntry(res.data);
-                setLoading(false);
+                // setLoading(false);
             })
-    }, [])
+    }, [bid])
 
 
     var imgPreview = (<div className="image-container">Seleccione una imagen para la vista previa</div>)

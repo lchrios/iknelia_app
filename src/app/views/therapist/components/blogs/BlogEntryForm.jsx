@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { RichTextEditor, Breadcrumb } from "app/components/index";
+import { RichTextEditor } from "app/components/index";
 import {
     Button,
   Grid,
     Icon,
 } from "@material-ui/core";
-import firebase from 'firebase/app';
+// import firebase from 'firebase/app';
 import { makeStyles } from '@material-ui/core/styles'
 import useAuth from "app/hooks/useAuth";
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';

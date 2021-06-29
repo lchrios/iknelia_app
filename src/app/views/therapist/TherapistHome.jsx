@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Icon, IconButton, Hidden, useMediaQuery, Card, Grid } from "@material-ui/core";
+import { Icon, IconButton, Hidden, useMediaQuery} from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import { useTheme } from '@material-ui/core/styles'
 import {
@@ -46,7 +46,7 @@ const TherapistHome = () => {
     const [sessions, setSessions] = useState()
     const [users, setUsers] = useState()
     const [blogs, setBlogs] = useState()
-    const [therapist, setTherapist] = useState()
+    // const [therapist, setTherapist] = useState()
     const [url, setUrl] = useState();
     const [counter, setCounter] = useState(5); // * Numero de requests  que se hacen
 
@@ -103,11 +103,11 @@ const TherapistHome = () => {
         api.get(`/t/${user.uid}/reAuth`)
         .then(res => {
             console.log(res, 'reAuth')
-            if (res.data == false) {
+            if (res.data === false) {
                 // console.log('No existe una cuenta')
                 setStripe(res.data)
                 finishReq()
-            } else if ((res.data.details_submitted == false) && (res.data.charges_enabled == false)) {
+            } else if ((res.data.details_submitted === false) && (res.data.charges_enabled === false)) {
                 // console.log('No se han completado los datos de registro en stripe, y por lo tanto no están disponibles los cargos')
                 setStripeId(res.data.id)
                 setStripeDetails(res.data.details_submitted);
@@ -123,7 +123,7 @@ const TherapistHome = () => {
                 finishReq()
             } 
         })
-    }, [])
+    }, [user.uid])
 
 
 
@@ -149,7 +149,7 @@ const TherapistHome = () => {
                             </IconButton>
                         </Hidden>
                     </div>
-                    <TherapistHomeSidenav details={stripeDetails} charges={stripeCharges} stripeId={stripeId} stripe={stripe} url={url} therapist={therapist} loading={loading} />
+                    <TherapistHomeSidenav details={stripeDetails} charges={stripeCharges} stripeId={stripeId} stripe={stripe} url={url} loading={loading} />
                 </MatxSidenav>
                 <MatxSidenavContent open={open}>
                     <div className={clsx('bg-primary', classes.headerBG)} />

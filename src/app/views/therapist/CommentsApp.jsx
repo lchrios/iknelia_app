@@ -5,12 +5,12 @@ import {
 } from 'app/components'
 import InboxTopBar from './components/comments/InboxTopbar'
 import { getAllMessage } from './components/comments/InboxService'
-import { useMediaQuery, Card, Button } from '@material-ui/core'
+import { useMediaQuery, Button } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import CommentsList from './components/comments/CommentsList'
 import useAuth from 'app/hooks/useAuth'
 import history from '../../../history'
-import { Link, Redirect } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 
 const Comments = () => {
     const { user } = useAuth()

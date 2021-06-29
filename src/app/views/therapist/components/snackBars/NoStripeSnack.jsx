@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { makeStyles } from '@material-ui/core/styles'
-import useAuth from 'app/hooks/useAuth'
+// import useAuth from 'app/hooks/useAuth'
 import { Fade } from '@material-ui/core'
 
 const variantIcon = {
@@ -75,16 +75,26 @@ const useStyles2 = makeStyles((theme) => ({
 }))
 
 export default function CustomizedSnackbars({ charges, details}) {
-    const [snack, setSnack] = useState(false);
-    const [state, setState] = useState({
-            open: false,
+    /**
+     * *Se comenta el useState para limpiar la consola. Reacomodando el código se vuelve a su estado tradicional de state de react.
+     */
+    // const [snack, setSnack] = useState(false);
+    // const [state, setState] = useState({
+    //         open: false,
+    //     Transition: Fade,
+    //     vertial:'top',
+    //     horizontal:'center'
+    // })
+
+    const state = {
+        open: false,
         Transition: Fade,
         vertial:'top',
         horizontal:'center'
-    })
-    const {user} = useAuth()
+    }
+    // const {user} = useAuth()
     const classes = useStyles2()
-    const { vertical, horizontal, open } = state
+    // const { vertical, horizontal, open } = state
 
     return (
         <div className="my-4">

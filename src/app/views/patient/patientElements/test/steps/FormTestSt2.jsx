@@ -1,15 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Card,
-    TextField,
-    Divider,
-    MenuItem,
     FormControlLabel,
     Radio,
     RadioGroup,
-    FormControl,
-    Checkbox,
-    Button,
 } from '@material-ui/core'
 
 const FormTestSt2 = ({ state, handleChange }) => {
@@ -67,14 +61,14 @@ const FormTestSt2 = ({ state, handleChange }) => {
     )
 }
 
-const stayDurationList = [
-    'Hace menos de una semana',
-    'Hace una semana',
-    'Hace un mes',
-    "Hace 6 meses",
-    "hace un año",
-    "Hace más de un año"
-]
+// const stayDurationList = [
+//     'Hace menos de una semana',
+//     'Hace una semana',
+//     'Hace un mes',
+//     "Hace 6 meses",
+//     "hace un año",
+//     "Hace más de un año"
+// ]
 
 
 

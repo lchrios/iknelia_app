@@ -4,9 +4,9 @@ import api from 'app/services/api'
 import TextForm from './editor/TextForm'
 // import ListComponent from './listItem/ListComponent'
 import React, { useState, useEffect } from "react";
-import { Icon, IconButton,Button, Hidden, useMediaQuery, Card, Grid } from "@material-ui/core";
+import { Icon, IconButton,Button, Hidden} from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import { useTheme } from '@material-ui/core/styles'
+// import { useTheme } from '@material-ui/core/styles'
 import {
     MatxSidenavContainer,
     MatxSidenav,
@@ -29,9 +29,9 @@ const usestyles = makeStyles(({ palette, ...theme }) => ({
 }))
 
 const NotesApp = () => {
-    const theme = useTheme()
+    // const theme = useTheme()
     const classes = usestyles()
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    // const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const [state, setState] = useState({
         selectedNoteIndex: null,
         selectedNote:null,
@@ -51,13 +51,14 @@ const NotesApp = () => {
             .catch(error => {
                 console.error(error)
             })
-        },[])
+        },[user.uid, state])
 
         return (
             <div className="relative">
                 {
                     loading ? <Loading/> :  
-                    <>{
+                    <>
+                    {
                     state.notes ?
                         <MatxSidenavContainer>
                             <MatxSidenav
@@ -69,11 +70,8 @@ const NotesApp = () => {
                                     notes={state.notes}/>
                                 </div>
                                 <div
-                                    className={clsx(
-                                        'bg-primary text-center',
-                                        classes.headerBG
-                                        ),'p-4'}
-                                        >
+                                    className={`${clsx('bg-primary text-center', classes.headerBG)},'p-4'`}
+                                >
                                             <Button 
                                             onClick={() => history.push('/' + user.uid +'/dashboard')}
                                             color="secondary" 
@@ -90,7 +88,7 @@ const NotesApp = () => {
                                 </div>
                             </MatxSidenav>
                             <MatxSidenavContent>
-                                <div className={clsx('bg-primary', classes.headerBG),'text-center'}>
+                                <div className={`${clsx('bg-primary', classes.headerBG)},'text-center'`}>
                                     <h1 className='pb-4 mb-2 mt-2'>Aplicación de notas</h1>
                                 </div>
                                 <TextForm />

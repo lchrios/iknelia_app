@@ -4,17 +4,14 @@ import {
     Divider,
     Card,
     TextField,
-    IconButton,
     Icon,
     Button,
     Fab,
 } from '@material-ui/core'
 import history from "../../../history"
-import { useHistory, Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import useAuth from 'app/hooks/useAuth'
-import axios from 'axios'
 import api from 'app/services/api'
 import { Loading } from 'app/components/Loading/Loading'
 import parse from "html-react-parser";
@@ -38,18 +35,18 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
     }
 }))
 
-const titles_data = [
-    {t: "Peligros del abuso de la PC"},
-    {t: "La decoracion: un reflejo de nuestra mente"},
-    {t: "El metro y la música: efecto sobre las personas"},
-    {t: "Sonoroterapia: terapia con sonidos calmantes"}
-];
+// const titles_data = [
+//     {t: "Peligros del abuso de la PC"},
+//     {t: "La decoracion: un reflejo de nuestra mente"},
+//     {t: "El metro y la música: efecto sobre las personas"},
+//     {t: "Sonoroterapia: terapia con sonidos calmantes"}
+// ];
 
 const TherapistBlogs = () => {
     const [blogs, setBlogs] = useState()
-    const [titles, setTitles] = useState(titles_data)
+    // const [titles, setTitles] = useState(titles_data)
     const [loading, setLoading] = useState(true)
-    const [image, setImage] = useState()
+    // const [image, setImage] = useState()
 
     const { user } = useAuth()
     const classes = useStyles()
@@ -62,7 +59,7 @@ const TherapistBlogs = () => {
                 setLoading(false)
             })
             .then(() => console.log("Blogs descargados"))
-    }, [])
+    }, [user.uid])
 
     return (
         <Card elevation={3} className={clsx('m-sm-30', classes.cart)}>

@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import Button from '@material-ui/core/Button'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+// import Button from '@material-ui/core/Button'
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
-import InfoIcon from '@material-ui/icons/Info'
+// import InfoIcon from '@material-ui/icons/Info'
 import CloseIcon from '@material-ui/icons/Close'
-import { amber, green } from '@material-ui/core/colors'
+// import { amber, green } from '@material-ui/core/colors'
 import IconButton from '@material-ui/core/IconButton'
-import Snackbar from '@material-ui/core/Snackbar'
+// import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
-import WarningIcon from '@material-ui/icons/Warning'
+// import WarningIcon from '@material-ui/icons/Warning'
 import { makeStyles } from '@material-ui/core/styles'
-import useAuth from 'app/hooks/useAuth'
+// import useAuth from 'app/hooks/useAuth'
 import { Fade } from '@material-ui/core'
-import api from 'app/services/api'
+// import api from 'app/services/api'
 
 const variantIcon = {
     error: ErrorIcon,
@@ -82,16 +82,25 @@ const useStyles2 = makeStyles((theme) => ({
 }))
 
 export default function CustomizedSnackbars() {
-    const [snack, setSnack] = useState(false);
-    const [state, setState] = useState({
+    // const [snack, setSnack] = useState(false);
+    const state = {
         open: false,
         Transition: Fade,
         vertial:'top',
         horizontal:'center'
-    })
-    const {user} = useAuth()
+    }
+    /**
+     * *Se comenta un setState para limpiar la consola. Al reacomodar el código volverá a ser un state tradicional de react.
+     */
+    // const [state, setState] = useState({
+    //     open: false,
+    //     Transition: Fade,
+    //     vertial:'top',
+    //     horizontal:'center'
+    // })
+    // const {user} = useAuth()
     const classes = useStyles2()
-    const { vertical, horizontal, open } = state
+    // const { vertical, horizontal, open } = state
     // const [open, setOpen] = useState(false)
 
     // function handleClick() {

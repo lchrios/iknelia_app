@@ -17,8 +17,7 @@ import Axios from 'axios'
 import PatientProfileCard1 from './components/PatientProfileCard'
 import useAuth from 'app/hooks/useAuth'
 import history from '../../../history'
-import axios from 'axios'
-import api from 'app/services/api'
+// import api from 'app/services/api'
 
 const PatientList = () => {
     const [isAlive, setIsAlive] = useState(true)
@@ -54,15 +53,15 @@ const PatientList = () => {
     }, [isAlive])
 
     const {user} = useAuth()
-    const [patients, setPatients] = useState()
+    // const [patients, setPatients] = useState()
 
-    useEffect(() => {
-        api.get('/t/' + user.uid + '/u')
-        .then(res => {
-            setPatients(res.data.data)
-        })
+    // useEffect(() => {
+    //     api.get('/t/' + user.uid + '/u')
+    //     .then(res => {
+    //         setPatients(res.data.data)
+    //     })
         
-    }, [])
+    // }, [])
 
     return (
         <div>

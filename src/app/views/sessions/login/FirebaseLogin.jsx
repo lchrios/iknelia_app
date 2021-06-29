@@ -125,7 +125,7 @@ const FirebaseLogin = () => {
         remember: true,
     })
     const [message, setMessage] = useState('')
-    const { signInWithGoogle, assignUserRole } = useAuth()
+    const { assignUserRole } = useAuth()
 
     const classes = useStyles()
 
@@ -179,20 +179,21 @@ const FirebaseLogin = () => {
                 console.error("Error al obtener el decodedToken del user", error)
             })
         } 
-    }, [user])
+    }, [user, assignUserRole])
 
-    const handleGoogleLogin = async (event) => {
-        try {
-            await signInWithGoogle()
-            var user = firebase.auth().currentUser
-            console.log(user)
-            history.push('/'+user.uid+'/dashboard')
-        } catch (e) {
-            setMessage(e.message)
-            setLoading(false)
-            console.log(e)
-        }
-    }
+    // const handleGoogleLogin = async (event) => {
+    //     try {
+    //         await signInWithGoogle()
+    //         var user = firebase.auth().currentUser
+    //         console.log(user)
+    //         history.push('/'+user.uid+'/dashboard')
+    //     } catch (e) {
+    //         setMessage(e.message)
+    //         setLoading(false)
+    //         console.log(e)
+    //     }
+    // }
+
     return (
         <div
             className={clsx(

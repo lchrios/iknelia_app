@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
     Card,
     Button,
     Avatar,
     Grid,
     Icon,
-    MenuItem,
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { CheckCircle } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import { MatxMenu, GoogleIcon } from 'app/components'
-import api from 'app/services/api'
-import useAuth from 'app/hooks/useAuth'
+import { GoogleIcon } from 'app/components'
 import DoneDialog from './DoneDialog'
 
 Date.prototype.addHours = function(h) {
@@ -33,26 +30,26 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
       },
 }))
 
-const patients = [
-    {
-        name: 'Jorge Rodriguez',
-        location: 'Guadalajara, Jalisco',
-        time: new Date(),
-        num: 1,
-    },
-    {
-        name: 'Matha Benitez',
-        location: 'Monterrey, Nuevo Leon',
-        time: new Date().addHours(1),
-        num: 3,
-    },
-    {
-        name: 'Carlos Martinez',
-        location: 'Aguascalientes, Aguascalientes',
-        time: new Date().addHours(3),
-        num: 2,
-    },
-]
+// const patients = [
+//     {
+//         name: 'Jorge Rodriguez',
+//         location: 'Guadalajara, Jalisco',
+//         time: new Date(),
+//         num: 1,
+//     },
+//     {
+//         name: 'Matha Benitez',
+//         location: 'Monterrey, Nuevo Leon',
+//         time: new Date().addHours(1),
+//         num: 3,
+//     },
+//     {
+//         name: 'Carlos Martinez',
+//         location: 'Aguascalientes, Aguascalientes',
+//         time: new Date().addHours(3),
+//         num: 2,
+//     },
+// ]
 
 const NextSessions = ({ sessions, users }) => {
 
@@ -80,16 +77,16 @@ const NextSessions = ({ sessions, users }) => {
         setOpen(false);
     }
 
-    const getClasses = (st) => {
-        switch (st) {
-            case 0:
+    // const getClasses = (st) => {
+    //     switch (st) {
+    //         case 0:
                 
-                break;
+    //             break;
         
-            default:
-                break;
-        }
-    }
+    //         default:
+    //             break;
+    //     }
+    // }
 
 
     return (
@@ -162,20 +159,20 @@ const NextSessions = ({ sessions, users }) => {
                                     onClick={() => {
                                         openDone(index)
                                     }}
-                                    startIcon={index == 0 ? <CheckCircle /> : <Icon>face</Icon>}
+                                    startIcon={index === 0 ? <CheckCircle /> : <Icon>face</Icon>}
                                     className={clsx("bg-light-primary hover-bg-primary text-primary px-5", classes.button)}
                                 >
-                                    {index == 0 ? 'Marcar como completada' : 'Contactar paciente'}
+                                    {index === 0 ? 'Marcar como completada' : 'Contactar paciente'}
                                     
                                 </Button>
                                 <Button
                                     size="small"
                                     variant="contained"
-                                    startIcon={index == 1 ? <Icon>watch_later</Icon> : <Icon>visibility</Icon>}
+                                    startIcon={index === 1 ? <Icon>watch_later</Icon> : <Icon>visibility</Icon>}
                                     className={clsx("bg-light-primary hover-bg-primary text-primary px-5 mr-1", classes.button)}
                                 >
 
-                                    {index == 1 ? 'Posponer sesión' : 'Ver perfil de usuario'}
+                                    {index === 1 ? 'Posponer sesión' : 'Ver perfil de usuario'}
                                     
                                 </Button>
                             </div>

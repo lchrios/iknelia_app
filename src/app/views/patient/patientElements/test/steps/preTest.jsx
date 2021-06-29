@@ -1,6 +1,6 @@
 import React from 'react'
 import history from 'history.js'
-import { Card, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import useAuth from 'app/hooks/useAuth'
 
 const PreTest = ({ handleChange }) => {

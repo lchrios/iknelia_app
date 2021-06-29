@@ -6,7 +6,6 @@ import {
     Card,
     Grid,
     Button,
-    CircularProgress,
     Stepper,
     Step,
     StepLabel,
@@ -20,15 +19,13 @@ import {
     Radio
 } from '@material-ui/core'
 
-import firebase from 'firebase/app'
-import { Home, Phone, Mail } from '@material-ui/icons'
+import { Home, Mail } from '@material-ui/icons'
 import clsx from 'clsx'
 import useAuth from 'app/hooks/useAuth'
 import history from '../../../../history'
 import { useLocation } from 'react-router'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
 import { Loading } from 'app/components/Loading/Loading'
-import api from 'app/services/api'
 
 const getSteps = () => ['Bienvenido', 'Contacto', 'Perfil']   
 
@@ -403,7 +400,7 @@ const UserDataForm = () => {
             } else {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
             }
-        } else if (activeStep == 1) {
+        } else if (activeStep === 1) {
             if (state.email === "" || state.email === undefined) {
                 setMessage("Introduce un correo");
             } else if (state.mail === "" || state.lname === undefined) {

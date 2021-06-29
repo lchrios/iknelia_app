@@ -7,8 +7,7 @@ import {
     Table,
     TableBody,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import { MatxMenu } from 'app/components'
+// import { makeStyles } from '@material-ui/core/styles'
 import history from 'history.js'
 import useAuth from 'app/hooks/useAuth'
 
@@ -17,17 +16,16 @@ Date.prototype.addHours = function(h) {
   return this;
 }
 
-const useStyles = makeStyles(({ palette, ...theme }) => ({
-    google: {
-        color: '#ec412c',
-    },
-    twitter: {
-        color: '#039ff5',
-    },
-}))
+// const useStyles = makeStyles(({ palette, ...theme }) => ({
+//     google: {
+//         color: '#ec412c',
+//     },
+//     twitter: {
+//         color: '#039ff5',
+//     },
+// }))
 
 const PatientCardEmpty = () => {
-    const classes = useStyles()
     const {user} = useAuth()
 
     return (

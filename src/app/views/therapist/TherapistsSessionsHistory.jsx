@@ -1,14 +1,12 @@
 import React, { Component, Fragment } from "react";
 import { Breadcrumb, SimpleCard } from "app/components/index";
-import { Card, Grid } from "@material-ui/core";
+import { Card} from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import SessionsHistory from './SessionsComponent'
 
 
 class TherapistHistory extends Component {
-    state = {};
     render() {
-        let { theme } = this.props; 
         return (
             <Fragment>
                 <div className="m-sm-30">

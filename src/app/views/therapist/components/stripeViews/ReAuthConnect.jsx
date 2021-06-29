@@ -1,19 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Card,
-    Checkbox,
-    FormControlLabel,
     Grid,
     Button,
-    CircularProgress,
 } from '@material-ui/core'
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+// import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import { Link, useLocation } from 'react-router-dom'
+// import { Link, useLocation } from 'react-router-dom'
 import useAuth from 'app/hooks/useAuth'
 import api from 'app/services/api'
-import history from './../../../../../history'
+// import history from './../../../../../history'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     cardHolder: {
@@ -70,7 +67,7 @@ const useStripeStyles = makeStyles(() => ({
 
 
 const ReAuthConnect = () => {
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const classes = useStyles()
     const {user} = useAuth()
     

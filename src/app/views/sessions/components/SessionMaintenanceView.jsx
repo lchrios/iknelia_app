@@ -9,7 +9,6 @@ const useStyles = makeStyles({
     root: {
         backgroundColor:'#e4cff5',
         display:'flex',
-        position:'relative',
         justifyContent:'center',
         alignItems:'center',
         position:'relative',

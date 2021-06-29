@@ -10,8 +10,8 @@ import {
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import { Link, useLocation } from 'react-router-dom'
-import useAuth from 'app/hooks/useAuth'
+import { Link } from 'react-router-dom'
+// import useAuth from 'app/hooks/useAuth'
 import history from '../../../../history'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
@@ -53,7 +53,7 @@ const TherapistFirebaseRegister = () => {
     const [state, setState] = useState({agreement:false})
     const classes = useStyles()
     const [message, setMessage] = useState('')
-    const { signInWithGoogle } = useAuth()
+    // const { signInWithGoogle } = useAuth()
 
     const handleChange = (event) => {
 
@@ -63,29 +63,29 @@ const TherapistFirebaseRegister = () => {
         })
     }
     
-    const handleGoogleRegister = (event) => {
-        signInWithGoogle()
-            .then( result => {
-                var { credential, accessToken, user } = result;
+    // const handleGoogleRegister = (event) => {
+    //     signInWithGoogle()
+    //         .then( result => {
+    //             var { credential, accessToken, user } = result;
 
-                history.push({
-                    pathname: '/therapist/info',
-                    state: {
-                        user: user,
-                        email: state.email,
-                        password: state.password,
-                        withProvider: true,
-                        credential: credential,
-                        token: accessToken
-                    }
-                });
-            })
-            .catch( error => {
-                console.error(error);
-                setMessage(error.message)
-                setLoading(false)
-            })
-    }
+    //             history.push({
+    //                 pathname: '/therapist/info',
+    //                 state: {
+    //                     user: user,
+    //                     email: state.email,
+    //                     password: state.password,
+    //                     withProvider: true,
+    //                     credential: credential,
+    //                     token: accessToken
+    //                 }
+    //             });
+    //         })
+    //         .catch( error => {
+    //             console.error(error);
+    //             setMessage(error.message)
+    //             setLoading(false)
+    //         })
+    // }
 
     const handleFormSubmit = () => {
         if (state.agreement)  {

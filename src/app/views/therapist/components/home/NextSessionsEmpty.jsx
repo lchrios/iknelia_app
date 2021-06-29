@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Card,
     Button,
-    Avatar,
     Grid,
     Icon,
 } from '@material-ui/core'
@@ -29,26 +28,26 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
       },
 }))
 
-const patients = [
-    {
-        name: 'Jorge Rodriguez',
-        location: 'Guadalajara, Jalisco',
-        time: new Date(),
-        num: 1,
-    },
-    {
-        name: 'Matha Benitez',
-        location: 'Monterrey, Nuevo Leon',
-        time: new Date().addHours(1),
-        num: 3,
-    },
-    {
-        name: 'Carlos Martinez',
-        location: 'Aguascalientes, Aguascalientes',
-        time: new Date().addHours(3),
-        num: 2,
-    },
-]
+// const patients = [
+//     {
+//         name: 'Jorge Rodriguez',
+//         location: 'Guadalajara, Jalisco',
+//         time: new Date(),
+//         num: 1,
+//     },
+//     {
+//         name: 'Matha Benitez',
+//         location: 'Monterrey, Nuevo Leon',
+//         time: new Date().addHours(1),
+//         num: 3,
+//     },
+//     {
+//         name: 'Carlos Martinez',
+//         location: 'Aguascalientes, Aguascalientes',
+//         time: new Date().addHours(3),
+//         num: 2,
+//     },
+// ]
 
 const NextSessionsEmpty = () => {
 
@@ -56,9 +55,9 @@ const NextSessionsEmpty = () => {
 
     const {user} = useAuth()
 
-    const [userList, setUserList] = useState(patients)
+    // const [userList, setUserList] = useState(patients)
 
-    const numberSession = 0
+    // const numberSession = 0
 
     return (
         /**Añadir un contador para que cuando la sesión sea la más próxima muestre los botones correctos */

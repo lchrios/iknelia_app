@@ -1,5 +1,5 @@
 import 'date-fns';
-import { Card, Grid, Icon, Button, Snackbar, IconButton, SnackbarContent } from '@material-ui/core'
+import { Card, Grid, Button, Snackbar, IconButton, SnackbarContent } from '@material-ui/core'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
@@ -95,7 +95,7 @@ MySnackbarContentWrapper.propTypes = {
 const TherapistSchedule = () => {
     const selectionSchemes = ['linear', 'square']
     const [state, setState] = useState({ schedule: [] })
-    const [loading, setLoading] = useState(true)
+    // const [loading, setLoading] = useState(true)
     const [openSuccess, setOpenS] = useState(false)
     const [openFailed, setOpenF] = useState(false)
     const { user } = useAuth() 
@@ -178,7 +178,7 @@ const TherapistSchedule = () => {
             console.error(er);
             handleFailed()
         })
-    }, [])
+    }, [state, user.uid])
     
     const handleDate = date => {
         setOptions({

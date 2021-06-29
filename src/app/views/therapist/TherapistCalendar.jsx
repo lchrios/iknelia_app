@@ -60,13 +60,18 @@ const TherapistCalendar = () => {
     const [events, setEvents] = useState([])
     const [newEvent, setNewEvent] = useState(null)
     const [shouldShowEventDialog, setShouldShowEventDialog] = useState(false)
-    const [isAlive, setIsAlive] = useState(true)
+    // const [isAlive, setIsAlive] = useState(true)
     const [userList, setUserList] = useState([])
     const { user } = useAuth()
 
 
-    const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [page, setPage] = useState(0)
+    /**
+     * *Se comenta el state por que su valor nunca es actualizado
+     */
+    const rowsPerPage = 5;
+    // const [rowsPerPage, setRowsPerPage] = useState(5)
+    const page = 0;
+    // const [page, setPage] = useState(0)
 
     const headerComponentRef = useRef(null)
     const classes = useStyles()
@@ -123,7 +128,7 @@ const TherapistCalendar = () => {
         .then(res => {
             setEvents(res.data.data)
         })
-    }, [])
+    }, [user.uid])
 
 
     {/**Añadir validación de paciente con base de datos */}
@@ -224,7 +229,7 @@ const TherapistCalendar = () => {
                             direction="column"
                             className="bg-default flex items-center justify-between p-4"
                             >
-                                {userList.length == 0 ? <PatientCardEmpty  /> : userList
+                                {userList.length === 0 ? <PatientCardEmpty  /> : userList
                                     .slice(
                                         page * rowsPerPage,
                                         page * rowsPerPage + rowsPerPage

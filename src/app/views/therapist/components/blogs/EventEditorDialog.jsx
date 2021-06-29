@@ -31,7 +31,7 @@ const EventEditorDialog = ({ event = {}, open, handleClose }) => {
             setTherapistData(res.data.data)
             setTherRef(res.data.data)
         })
-    }, [event])
+    }, [event,user.uid])
 
     const handleFormSubmit = () => {
         let { id } = state
@@ -78,13 +78,13 @@ const EventEditorDialog = ({ event = {}, open, handleClose }) => {
         })
     }
 
-    const generateRandomId = () => {
-        let tempId = Math.random().toString()
-        let id = tempId.substr(2, tempId.length - 1)
-        return id
-    }
+    // const generateRandomId = () => {
+    //     let tempId = Math.random().toString()
+    //     let id = tempId.substr(2, tempId.length - 1)
+    //     return id
+    // }
 
-    let { title, start, end, location, note } = state
+    let { title, start, location, note } = state
 
     return (
         <Dialog

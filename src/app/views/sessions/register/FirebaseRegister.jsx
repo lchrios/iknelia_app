@@ -11,7 +11,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
-import useAuth from 'app/hooks/useAuth'
+// import useAuth from 'app/hooks/useAuth'
 import history from '../../../../history'
 
 
@@ -54,7 +54,7 @@ const FirebaseRegister = () => {
     const [state, setState] = useState({agreement: false})
     const classes = useStyles()
     const [message, setMessage] = useState('')
-    const { signInWithGoogle } = useAuth()
+    // const { signInWithGoogle } = useAuth()
 
      // *Escucha los valores de los inputs
     const handleChange = ({ target: { name, value } }) => {
@@ -65,29 +65,29 @@ const FirebaseRegister = () => {
     }
 
     // *REGISTRO CON GOOGLE
-    const handleGoogleRegister = (event) => {
-        signInWithGoogle()
-            .then( result => {
-                var { credential, accessToken, user } = result;
+    // const handleGoogleRegister = (event) => {
+    //     signInWithGoogle()
+    //         .then( result => {
+    //             var { credential, accessToken, user } = result;
 
-                history.push({
-                    pathname: '/session/register',
-                    state: {
-                        user: user,
-                        email: state.email,
-                        password: state.password,
-                        withProvider: true,
-                        credential: credential,
-                        token: accessToken
-                    }
-                });
-            })
-            .catch( error => {
-                console.error(error);
-                setMessage(error.message)
-                setLoading(false)
-            })
-    }
+    //             history.push({
+    //                 pathname: '/session/register',
+    //                 state: {
+    //                     user: user,
+    //                     email: state.email,
+    //                     password: state.password,
+    //                     withProvider: true,
+    //                     credential: credential,
+    //                     token: accessToken
+    //                 }
+    //             });
+    //         })
+    //         .catch( error => {
+    //             console.error(error);
+    //             setMessage(error.message)
+    //             setLoading(false)
+    //         })
+    // }
 
     //*Envía la información de registro a la base de datos
     const handleFormSubmit = () => {

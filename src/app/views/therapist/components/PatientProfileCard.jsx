@@ -1,22 +1,21 @@
 import React from 'react'
 import { Card, Button, Icon, Avatar, MenuItem } from '@material-ui/core'
-import { MatxMenu, GoogleIcon } from 'app/components'
-import { Link } from 'react-router-dom'
-import { Twitter } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
+import { MatxMenu } from 'app/components'
+// import { Link } from 'react-router-dom'
+// import { Twitter } from '@material-ui/icons'
+// import { makeStyles } from '@material-ui/core/styles'
+// import clsx from 'clsx'
 
-const useStyles = makeStyles(({ palette, ...theme }) => ({
-    google: {
-        color: '#ec412c',
-    },
-    twitter: {
-        color: '#039ff5',
-    },
-}))
+// const useStyles = makeStyles(({ palette, ...theme }) => ({
+//     google: {
+//         color: '#ec412c',
+//     },
+//     twitter: {
+//         color: '#039ff5',
+//     },
+// }))
 
 const PatientProfileCard1 = ({ user }) => {
-    const classes = useStyles()
 
     return (
         <Card className="p-5">

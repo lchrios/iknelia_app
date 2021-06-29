@@ -1,8 +1,8 @@
-import { Avatar, Button, Card, Dialog, Divider, Grid, Icon, IconButton, TextField } from '@material-ui/core';
+import { Avatar, Button, Card, Dialog, Divider, Grid, Icon, IconButton} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { CheckCircle } from '@material-ui/icons';
 import api from 'app/services/api';
-import React, { useState } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -13,13 +13,13 @@ const useStyles = makeStyles((theme) => ({
 const DoneDialog = ({ open, closeDone, session, sid, img }) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const classes = useStyles();
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const confirmSession = (event) => {
-        setLoading(true)
+        // setLoading(true)
         api.post(`/s/${sid}/done`)
         .then(res => {
             console.log("Sesion actualizada con éxito")
-            setLoading(false);
+            // setLoading(false);
             closeDone();
         })
         .catch(er => {
@@ -124,6 +124,7 @@ const DoneDialog = ({ open, closeDone, session, sid, img }) => {
                             color="secondary"
                             size="large"
                             fullWidth
+                            onClick={confirmSession}
                             className={classes.button}
                             startIcon={<CheckCircle />}
                         >

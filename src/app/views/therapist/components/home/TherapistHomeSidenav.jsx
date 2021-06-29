@@ -15,24 +15,24 @@ import ChargesEnabled from '../snackBars/ChargesEnabled'
 
 
 
-const useStripeStyles = makeStyles(({palette, ...theme}) => ({
-    stripeConnect: {
-        background: palette.primary.main,
-        display:"inline-block",
-        height: 38,
-        textDecoration: "none",
-        width: 180,
-        borderRadius: 4,
-        mozBorderRadius: 4,
-        webkitBorderRadius: 4,
-        userSelect: 'none',
-        mozUserSelect: 'none',
-        webkitUserSelect: 'none',
-        msUserSelect: 'none',
-        webkitfontSmoothing: 'antialiased'
+// const useStripeStyles = makeStyles(({palette, ...theme}) => ({
+//     stripeConnect: {
+//         background: palette.primary.main,
+//         display:"inline-block",
+//         height: 38,
+//         textDecoration: "none",
+//         width: 180,
+//         borderRadius: 4,
+//         mozBorderRadius: 4,
+//         webkitBorderRadius: 4,
+//         userSelect: 'none',
+//         mozUserSelect: 'none',
+//         webkitUserSelect: 'none',
+//         msUserSelect: 'none',
+//         webkitfontSmoothing: 'antialiased'
 
-    }
-}))
+//     }
+// }))
 
 const usestyles = makeStyles(({ palette, ...theme }) => ({
     sidenav: {
@@ -46,7 +46,7 @@ const usestyles = makeStyles(({ palette, ...theme }) => ({
 
 const TherapistHomeSidenav = ({ url, stripe, stripeId, details, charges}) => {
     const classes = usestyles()
-    const str_classes = useStripeStyles()
+    // const str_classes = useStripeStyles()
     const [sched, setSched] = useState(true);
     const { user } = useAuth()
 
@@ -60,7 +60,7 @@ const TherapistHomeSidenav = ({ url, stripe, stripeId, details, charges}) => {
         setOpen(false)
     }
 
-    const [openS, setOpenS] = React.useState(false)
+    // const [openS, setOpenS] = React.useState(false)
 
     // function handleClick() {
     //     setOpenS(true)
@@ -96,7 +96,7 @@ const TherapistHomeSidenav = ({ url, stripe, stripeId, details, charges}) => {
                 setSched(res.data.schedule.length !== 0);
             }
         })
-    },[])
+    },[user.uid])
 
     return (
         <div>

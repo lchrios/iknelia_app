@@ -1,7 +1,6 @@
 import React from 'react'
 import {
     Avatar,
-    Button,
     Card,
     Divider,
     Icon,
@@ -15,7 +14,7 @@ import { TableHead } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { useState } from 'react'
-import useAuth from 'app/hooks/useAuth'
+// import useAuth from 'app/hooks/useAuth'
 import { TextField } from '@material-ui/core'
 
 const useStyles = makeStyles(({ palette, ...theme }) => ({
@@ -35,17 +34,17 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
 }))
 
 const TherapistInfo = () => {
-    const user = useAuth()
+    // const user = useAuth()
     const [edit, setEdit] = useState(false)
-    let state = useState({
-            email:'',
-            phone:'',
-            zoom:'',
-            cédula:'',
-            adress:''
+    // let state = useState({
+    //         email:'',
+    //         phone:'',
+    //         zoom:'',
+    //         cédula:'',
+    //         adress:''
 
             
-    });
+    // });
 
     function handleEdit() {
         setEdit(true)

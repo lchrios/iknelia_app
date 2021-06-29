@@ -8,10 +8,7 @@ import {
     Stepper,
     Step,
     StepLabel,
-    Input, 
-    InputLabel, 
     InputAdornment, 
-    FormControl,
     Icon,
     TextField,
     Divider,
@@ -21,14 +18,13 @@ import {
 } from '@material-ui/core'
 import PhoneInput from 'react-phone-number-input'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator'
-import { Home, Mail, Phone, DataUsage, Videocam, HourglassEmpty } from '@material-ui/icons'
+import { Home, Mail, DataUsage, Videocam, HourglassEmpty } from '@material-ui/icons'
 import clsx from 'clsx'
 import api from 'app/services/api'
 import history from '../../../../history'
 import firebase from 'firebase/app'
 import useAuth from 'app/hooks/useAuth'
 import { useLocation } from 'react-router'
-import FormData from 'form-data'
 const useStyles = makeStyles(({ palette, ...theme }) => ({
     cardHolder: {
         background: '#1A2038',
@@ -72,14 +68,14 @@ const TherapistDataForm = () => {
     const [state, setState] = useState(useLocation().state, {grade:false})
     const [imgRender, setImgRender] = useState();
     const { createTherapistWithEmailAndPassword, signInWithEmailAndPassword } = useAuth();
-    
+    const currentUser = firebase.auth().currentUser;
 
     useEffect(() => {
         
         if (firebase.auth().currentUser) {
             history.push(`/${firebase.auth().currentUser.uid}/dashboard`)
         }
-    }, [firebase.auth().currentUser])
+    }, [currentUser])
 
     const getSteps = () => {
         return ['Contacto', 'Profesional', 'Perfil']
@@ -347,24 +343,24 @@ const TherapistDataForm = () => {
     }
 
     const handleNext = () => {
-        if (activeStep == 0) {
-            if (state.grade == false || state.grade == undefined) {
+        if (activeStep === 0) {
+            if (state.grade === false || state.grade === undefined) {
                 setMessage('Debes confirmar que cuentas con un título profesional')
-            } else if(state.name == "" || state.name == undefined) {
+            } else if(state.name === "" || state.name === undefined) {
                 setMessage('Ingresa tu nombre por favor')
-            } else if(state.lastname == "" || state.lastname == undefined) {
+            } else if(state.lastname === "" || state.lastname === undefined) {
                 setMessage('Ingresa tu apellido por favor')
-            } else if(state.address == "" || state.address == undefined) {
+            } else if(state.address === "" || state.address === undefined) {
                 setMessage('Ingresa tu dirección por favor')
-            } else if(state.phone == "" || state.phone == undefined) {
+            } else if(state.phone === "" || state.phone === undefined) {
                 setMessage('Ingresa tu número telefónico por favor')
             }else {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
                 setMessage("")}
-        }else if (activeStep == 1) {
-            if (state.cedula == "" || state.cedula == undefined) {
+        }else if (activeStep === 1) {
+            if (state.cedula === "" || state.cedula === undefined) {
                 setMessage('Debes ingresar tu cédula profesional')
-            } else if (state.age == "" || state.age == undefined) {
+            } else if (state.age === "" || state.age === undefined) {
                 setMessage('Debes ingresar una edad')
             } else if (state.age < 18) {
                 setMessage('No cumples con la mayoría de edad')
@@ -374,13 +370,13 @@ const TherapistDataForm = () => {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
                 setMessage("")
             }
-        }else if (activeStep == 2) {
+        }else if (activeStep === 2) {
         }
 
     }
 
     const handleBack = () => {
-        if(activeStep == 0) {
+        if(activeStep === 0) {
             history.push('/therapist/signup')
         }else {
             setActiveStep((prevActiveStep) => prevActiveStep - 1)
@@ -391,11 +387,7 @@ const TherapistDataForm = () => {
     const handleReset = () => {
         setActiveStep(0)
     }
-
-
-    /**
-     * *Se comenta el useEffect por falta utilidad (aunque parece ser de seguridad, CHRIOS, ¿ES DE SEGURIDAD?)
-     */
+    
     useEffect(() => {
         if (isAuthenticated) {
             history.push(`/${user.uid}/dashboard`)
@@ -406,14 +398,14 @@ const TherapistDataForm = () => {
                 if(res.data.url) {
                     window.location.href=res.data.url
                 }
-            }). catch(e => {
+            }).catch(e => {
                 console.error(e, 'No hemos podido enviarte al dashboard de stripe')
             })
         }
-    }, [isAuthenticated])
+    }, [isAuthenticated, user.uid, state.email, ])
 
     const handleFormSubmit = () => {
-        let { email, password, withProvider, cv, img } = state;
+        let { email, password, withProvider} = state;
         delete state.cv;
         delete state.img;
         delete state.withProvider;
@@ -431,18 +423,18 @@ const TherapistDataForm = () => {
                     }
                 })
                 .then(res => {
-                    if (res.status == 200 && isAuthenticated) {
+                    if (res.status === 200 && isAuthenticated) {
                         history.push(`/${user.uid}/home`)
+                    }
                     // api.post(`/t/${user.uid}/connect`,{
                     //     email:email,
-                    // }).then(res => {
+                    // // }).then(res => {
                     //     if(res.data.url) {
                     //         window.location.href=res.data.url
                     //     }
-                    // }). catch(e => {
+                    // // }). catch(e => {
                     //     console.error(e, 'No hemos podido enviarte al dashboard de stripe')
-                    // })
-                    }
+                    // // })
                      
                 })
                 .catch( error => {
@@ -457,7 +449,7 @@ const TherapistDataForm = () => {
         createTherapistWithEmailAndPassword(state)
         .then( userRec => {
             // * Aqui haces lo de que te mande a otro lado
-            firebase.auth().signInWithEmailAndPassword(email, password)
+            signInWithEmailAndPassword(email, password)
             .then(() => {
                 console.log("Sesion iniciada...");
                 
@@ -524,9 +516,9 @@ const TherapistDataForm = () => {
                                                     <Button
                                                         variant="contained"
                                                         color="primary"
-                                                        onClick={activeStep == getSteps().length - 1? handleFormSubmit : handleNext}
+                                                        onClick={activeStep === getSteps().length - 1? handleFormSubmit : handleNext}
                                                     >
-                                                        {activeStep == getSteps().length - 1
+                                                        {activeStep === getSteps().length - 1
                                                         ? 'Enviar respuestas' : 'Siguiente'}
                                                     </Button>
                                                     {loading && (

@@ -6,7 +6,7 @@ import {
     Icon,
     MenuItem
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+// import { makeStyles } from '@material-ui/core/styles'
 import { MatxMenu } from 'app/components'
 
 Date.prototype.addHours = function(h) {
@@ -14,17 +14,16 @@ Date.prototype.addHours = function(h) {
   return this;
 }
 
-const useStyles = makeStyles(({ palette, ...theme }) => ({
-    google: {
-        color: '#ec412c',
-    },
-    twitter: {
-        color: '#039ff5',
-    },
-}))
+// const useStyles = makeStyles(({ palette, ...theme }) => ({
+//     google: {
+//         color: '#ec412c',
+//     },
+//     twitter: {
+//         color: '#039ff5',
+//     },
+// }))
 
 const PatientCard = ({ user }) => {
-    const classes = useStyles()
 
     return (
         <Grid item lg={12} md={12} sm={12} xs={12} style={{maxWidth: 200}}>

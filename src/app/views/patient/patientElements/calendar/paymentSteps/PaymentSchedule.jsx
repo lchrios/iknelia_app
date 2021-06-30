@@ -73,7 +73,7 @@ const PaymentSchedule = ({ setMessage, handleNext, state, setState, hasSched, se
                 console.error(er);
             })
         }
-    }, [back, user.uid, setMessage, setHasSched, setState, state])
+    }, [back,user.uid])
     
     const handleDate = date => {
         setOptions({

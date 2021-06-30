@@ -40,13 +40,10 @@ const useStyles = makeStyles(({ palette, ...theme }) => ({
     },
 }))
 
-/**
- * ? debería la función retornar un this?, donde se escucha este valor?
- */
-Date.prototype.addHours= function(h){
-    this.setHours(this.getHours()+h);
-    return this;
-}
+// Date.prototype.addHours= function(h){
+//     this.setHours(this.getHours()+h);
+//     return this;
+// }
 
 const localizer = globalizeLocalizer(globalize)
 
@@ -123,7 +120,7 @@ const PatientCalendar = ({ sessions, therapist, tid, payed }) => {
                         openNewEventDialog({
                             action: 'doubleClick',
                             start: new Date(),
-                            end: new Date().addHours(1),
+                            end: new Date(new Date().getMilliseconds() + 3600 * 1000),
                         })
                     }}
                 >

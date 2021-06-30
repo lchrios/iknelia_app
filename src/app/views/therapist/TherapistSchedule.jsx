@@ -178,7 +178,7 @@ const TherapistSchedule = () => {
             console.error(er);
             handleFailed()
         })
-    }, [state, user.uid])
+    }, [user.uid])
     
     const handleDate = date => {
         setOptions({

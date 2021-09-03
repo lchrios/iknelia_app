@@ -49,7 +49,6 @@ const App = () => {
                                         </AuthGuard>
                                     </Switch>
                                 </MatxSuspense>
-                            </AuthProvider>
                         </Router>
                     </MatxTheme>
                 </SettingsProvider>

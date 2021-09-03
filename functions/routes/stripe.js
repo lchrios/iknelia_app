@@ -1,13 +1,10 @@
 const stripe = require('stripe')([
-    "sk_test_51IRM5vEkM6QFZKw2N9Ow9xCKwSd2b8J3JjWb2BL9kH5FVCXvJ5fSmFW6GvJot90XsUdgSfbtpPraG5u9Kmycvi5C00HIcjkWgG",
-    "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",
+    //aquí van las claves secretas para conectar con stripe
 ][0]);
 
 
 const endpoint_secret = [
-    "whsec_fwfyWE5QTrOkBJZ7mEfU3LxgsOwhkpvy", // * Stripe LIVE
-    "whsec_CObnwxUSvfRajVBO08viht8UpZNRXWhI", // * Stripe TEST
-    "whsec_cNX97MfyLEMrl3JKqICh4FoGVDxWYB5g", // * temp local sig
+    //Aquí se escriben las claves secretas para la terminal de stripe
 ][1]; 
 
 const { ContactsOutlined } = require('@material-ui/icons');
@@ -171,9 +168,6 @@ exports.expressAccount = async (req, res) => {
         }
     })
     .then(response => {
-        /**
-         * TODO MOVER TEST DATA
-         */
         thers.doc(req.params.tid).update({stripeId:response.id, charges_enabled:response.charges_enabled})
         const host = [
             'http://localhost:3000', // * local emulator dev host
@@ -227,7 +221,7 @@ exports.connectFailed = (req,res) => {
 
     thers.doc(req.params.tid).get().then(doc => {
         console.log(doc.data().stripeId, 'connectFailedFunction')
-        stripe.accountLinks.create({
+        stripe.accountLinks.update({
             account: doc.data().stripeId,
             refresh_url: `${host}/${req.params.tid}/connect`,
             return_url: `${host}/${req.params.tid}/dashboard`,

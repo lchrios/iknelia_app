@@ -390,7 +390,6 @@ const TherapistDataForm = () => {
     
     useEffect(() => {
         if (isAuthenticated) {
-            history.push(`/${user.uid}/dashboard`)
             console.log(state.email)
             api.post(`/t/${user.uid}/connect`,{
                 email:state.email,
@@ -402,7 +401,7 @@ const TherapistDataForm = () => {
                 console.error(e, 'No hemos podido enviarte al dashboard de stripe')
             })
         }
-    }, [isAuthenticated, user.uid, state.email, ])
+    }, [isAuthenticated, state.email ])
 
     const handleFormSubmit = () => {
         let { email, password, withProvider} = state;
